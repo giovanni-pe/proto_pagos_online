@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UNAS Pagos - Sistema Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --unas-verde: #20c997;
+            --unas-verde-light: #63e6be;
+            --unas-verde-soft: rgba(32, 201, 151, 0.1);
+            --unas-verde-glow: rgba(32, 201, 151, 0.2);
+            --unas-amarillo: #ffc107;
+            --unas-amarillo-soft: rgba(255, 193, 7, 0.12);
+            --unas-rojo: #dc3545;
+            --unas-rojo-soft: rgba(220, 53, 69, 0.1);
+            --bg-primary: #f8fffe;
+            --bg-secondary: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.85);
+            --bg-glass-strong: rgba(255, 255, 255, 0.95);
+            --text-primary: #1a1a2e;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --shadow-soft: 0 2px 12px rgba(32, 201, 151, 0.08);
+            --shadow-card: 0 4px 20px rgba(32, 201, 151, 0.1);
+            --shadow-float: 0 8px 30px rgba(32, 201, 151, 0.15);
+            --blur-glass: blur(20px);
+            --border-glass: 1px solid rgba(32, 201, 151, 0.12);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --radius-full: 9999px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background */
+        .bg-decoration {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.25;
+        }
+
+        .bg-blob-1 { width: 400px; height: 400px; background: var(--unas-verde-light); top: -150px; right: -100px; }
+        .bg-blob-2 { width: 300px; height: 300px; background: var(--unas-amarillo); bottom: 10%; left: -100px; opacity: 0.15; }
+
+        /* Login Screen */
+        .login-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .login-screen.hidden { display: none; }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            border: var(--border-glass);
+            border-radius: var(--radius-xl);
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-float);
+            text-align: center;
+        }
+
+        .login-logo {
+            width: 72px;
+            height: 72px;
+            background: var(--unas-verde);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 800;
+            box-shadow: var(--shadow-card);
+        }
+
+        .login-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .login-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 2rem; }
+
+        .login-step { display: none; }
+        .login-step.active { display: block; }
+
+        .input-group { margin-bottom: 1.25rem; text-align: left; }
+        .input-label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-family: inherit;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            letter-spacing: 2px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--unas-verde);
+            box-shadow: 0 0 0 4px var(--unas-verde-soft);
+        }
+
+        .input-field::placeholder { letter-spacing: normal; color: var(--text-muted); }
+
+        .input-field.email { letter-spacing: normal; }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--unas-verde);
+            color: white;
+            box-shadow: var(--shadow-card);
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-float); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .btn-secondary {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            margin-top: 0.75rem;
+        }
+
+        .btn-text {
+            background: none;
+            color: var(--unas-verde);
+            font-weight: 600;
+            padding: 0.5rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* User Preview Card */
+        .user-preview {
+            background: var(--unas-verde-soft);
+            border: 2px solid var(--unas-verde);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-preview-avatar {
+            width: 56px;
+            height: 56px;
+            background: var(--unas-verde);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .user-preview-info h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.15rem; }
+        .user-preview-info p { font-size: 0.8rem; color: var(--text-secondary); }
+
+        .user-preview-badge {
+            margin-left: auto;
+            padding: 0.3rem 0.6rem;
+            background: var(--unas-verde);
+            color: white;
+            border-radius: var(--radius-full);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* API Data Cards */
+        .api-data-section {
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+
+        .api-data-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .api-data-title i { color: var(--unas-verde); }
+
+        .api-cards { display: grid; gap: 0.6rem; }
+
+        .api-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .api-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .api-card-icon.academic { background: #e0f2fe; color: #0369a1; }
+        .api-card-icon.financial { background: #dcfce7; color: #16a34a; }
+        .api-card-icon.library { background: #fef3c7; color: #d97706; }
+        .api-card-icon.idiomas { background: #f3e8ff; color: #9333ea; }
+
+        .api-card-info { flex: 1; }
+        .api-card-label { font-size: 0.7rem; color: var(--text-muted); }
+        .api-card-value { font-size: 0.85rem; font-weight: 600; }
+
+        .api-card-status {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+        }
+
+        .api-card-status.ok { background: var(--unas-verde-soft); color: var(--unas-verde); }
+        .api-card-status.warning { background: var(--unas-amarillo-soft); color: #b38600; }
+        .api-card-status.error { background: var(--unas-rojo-soft); color: var(--unas-rojo); }
+
+        /* Alert in login */
+        .login-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.85rem;
+            background: var(--unas-amarillo-soft);
+            border-radius: var(--radius-md);
+            margin-bottom: 1.25rem;
+            text-align: left;
+            border-left: 4px solid var(--unas-amarillo);
+        }
+
+        .login-alert i { color: #d4a106; margin-top: 0.1rem; }
+        .login-alert-text { font-size: 0.8rem; color: #8a6d00; }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-glass);
+        }
+
+        /* App Container */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-container.hidden { display: none; }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-glass-strong);
+            backdrop-filter: var(--blur-glass);
+            border-bottom: var(--border-glass);
+            padding: 0.75rem 1rem;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 0.75rem; }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--unas-verde);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        .header-title h1 { font-size: 1rem; font-weight: 700; }
+        .header-title span { font-size: 0.7rem; color: var(--text-secondary); }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.4rem 0.75rem 0.4rem 0.4rem;
+            background: var(--bg-glass);
+            border: var(--border-glass);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .header-user:hover { background: var(--unas-verde-soft); }
+
+        .header-user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--unas-verde);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.85rem;
+        }
+
+        .header-user-info { display: none; }
+        .header-user-name { font-size: 0.8rem; font-weight: 600; }
+        .header-user-type { font-size: 0.65rem; color: var(--text-muted); }
+
+        /* Tabs Navigation */
+        .tabs-nav {
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            border-bottom: var(--border-glass);
+            padding: 0 1rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tabs-nav::-webkit-scrollbar { display: none; }
+
+        .tabs-nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .tab-btn {
+            padding: 0.85rem 1.25rem;
+            background: none;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover { color: var(--unas-verde); }
+
+        .tab-btn.active {
+            color: var(--unas-verde);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--unas-verde);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-btn i { margin-right: 0.4rem; }
+
+        /* Main Content */
+        .main-layout {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 1rem;
+        }
+
+        /* Tab Content */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* User Welcome */
+        .welcome-card {
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            border: var(--border-glass);
+            border-radius: var(--radius-xl);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .welcome-user { display: flex; align-items: center; gap: 1rem; }
+
+        .welcome-avatar {
+            width: 56px;
+            height: 56px;
+            background: var(--unas-verde);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .welcome-info h2 { font-size: 1.1rem; font-weight: 700; }
+        .welcome-info p { font-size: 0.8rem; color: var(--text-secondary); }
+
+        .welcome-badge {
+            padding: 0.3rem 0.7rem;
+            background: var(--unas-verde);
+            color: white;
+            border-radius: var(--radius-full);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .welcome-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .stat-box { text-align: center; flex: 1; }
+        .stat-value { font-size: 1.4rem; font-weight: 800; color: var(--unas-verde); }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+
+        /* Quick API Status */
+        .api-status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .api-status-card {
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            border: var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .api-status-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .api-status-icon.academic { background: #e0f2fe; color: #0369a1; }
+        .api-status-icon.deudas { background: #fef3c7; color: #d97706; }
+        .api-status-icon.biblioteca { background: #f3e8ff; color: #9333ea; }
+        .api-status-icon.idiomas { background: #dcfce7; color: #16a34a; }
+
+        .api-status-info { flex: 1; }
+        .api-status-title { font-size: 0.8rem; font-weight: 600; }
+        .api-status-value { font-size: 0.75rem; color: var(--text-secondary); }
+
+        /* Alert Banner */
+        .alert-banner {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            background: var(--unas-amarillo-soft);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--unas-amarillo);
+            margin-bottom: 1rem;
+        }
+
+        .alert-banner i { color: #d4a106; font-size: 1.1rem; }
+        .alert-banner-content { flex: 1; }
+        .alert-banner-title { font-size: 0.85rem; font-weight: 700; color: #8a6d00; }
+        .alert-banner-text { font-size: 0.75rem; color: #a68500; }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        /* Services Section */
+        .section-card {
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            border: var(--border-glass);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 1rem 1.25rem;
+            border-bottom: var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .section-title { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .section-title i { color: var(--unas-verde); }
+
+        .filter-pills { display: flex; gap: 0.4rem; overflow-x: auto; }
+
+        .filter-pill {
+            flex-shrink: 0;
+            padding: 0.45rem 0.85rem;
+            background: transparent;
+            border: 1.5px solid var(--border-glass);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-pill:hover { border-color: var(--unas-verde); color: var(--unas-verde); }
+        .filter-pill.active { background: var(--unas-verde); border-color: var(--unas-verde); color: white; }
+
+        .section-body { padding: 1rem 1.25rem; }
+
+        /* Search */
+        .search-bar { margin-bottom: 1rem; }
+
+        .search-input-wrapper { position: relative; }
+
+        .search-input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.75rem;
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .search-input:focus { outline: none; border-color: var(--unas-verde); }
+        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+
+        /* Service List */
+        .service-list { display: grid; gap: 0.6rem; }
+
+        .service-card {
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .service-card:hover { border-color: var(--unas-verde-light); }
+        .service-card.selected { border-color: var(--unas-verde); background: var(--unas-verde-soft); }
+        .service-card.auto-added { border-left: 4px solid var(--unas-amarillo); background: var(--unas-amarillo-soft); }
+
+        .service-title { font-size: 0.85rem; font-weight: 600; line-height: 1.3; }
+        .service-meta { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem; }
+
+        .service-tag {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .service-tag.pregrado { background: #e0f2fe; color: #0369a1; }
+        .service-tag.posgrado { background: #f3e8ff; color: #7e22ce; }
+        .service-tag.idiomas { background: #fef3c7; color: #b45309; }
+        .service-tag.auto { background: var(--unas-amarillo); color: #704d00; }
+
+        .service-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; }
+        .service-price { font-size: 1rem; font-weight: 800; color: var(--unas-verde); }
+
+        .service-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            font-size: 0.7rem;
+        }
+
+        .service-card.selected .service-checkbox { background: var(--unas-verde); border-color: var(--unas-verde); color: white; }
+        .service-card.auto-added .service-checkbox { background: var(--unas-amarillo); border-color: var(--unas-amarillo); color: white; }
+
+        /* Cart Panel Desktop */
+        .cart-panel {
+            display: none;
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            border: var(--border-glass);
+            border-radius: var(--radius-xl);
+            position: sticky;
+            top: 140px;
+        }
+
+        .cart-header {
+            padding: 1rem;
+            border-bottom: var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-title { font-size: 0.95rem; font-weight: 700; }
+        .cart-count { background: var(--unas-verde); color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+
+        .cart-body { padding: 0.75rem; max-height: 250px; overflow-y: auto; }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item:last-child { margin-bottom: 0; }
+
+        .cart-item-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .cart-item-icon.auto { background: var(--unas-amarillo-soft); color: #b38600; }
+        .cart-item-icon.selected { background: var(--unas-verde-soft); color: var(--unas-verde); }
+
+        .cart-item-info { flex: 1; min-width: 0; }
+        .cart-item-title { font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .cart-item-price { font-size: 0.8rem; font-weight: 700; color: var(--unas-verde); }
+
+        .cart-summary { padding: 0.75rem; background: var(--bg-secondary); border-top: var(--border-glass); }
+
+        .summary-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.35rem; }
+        .summary-row.total { font-size: 1rem; font-weight: 800; padding-top: 0.5rem; border-top: 1px dashed var(--border-glass); }
+        .summary-row.total span:last-child { color: var(--unas-verde); }
+
+        .cart-actions { padding: 0.75rem; }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 0.85rem;
+            background: var(--unas-verde);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Mobile Cart Bar */
+        .mobile-cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-glass-strong);
+            backdrop-filter: var(--blur-glass);
+            border-top: var(--border-glass);
+            padding: 0.75rem 1rem;
+            padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0));
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .mobile-cart-info { flex: 1; display: flex; align-items: center; gap: 0.6rem; }
+
+        .mobile-cart-badge {
+            width: 36px;
+            height: 36px;
+            background: var(--unas-verde-soft);
+            color: var(--unas-verde);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .mobile-cart-text { font-size: 0.7rem; color: var(--text-secondary); }
+        .mobile-cart-text strong { display: block; font-size: 1rem; color: var(--unas-verde); }
+
+        .mobile-cart-btn {
+            padding: 0.75rem 1.25rem;
+            background: var(--unas-verde);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* History Tab */
+        .history-list { display: grid; gap: 0.75rem; }
+
+        .history-card {
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            border: var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .history-date { font-size: 0.75rem; color: var(--text-muted); }
+        .history-status {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+        }
+
+        .history-status.paid { background: var(--unas-verde-soft); color: var(--unas-verde); }
+        .history-status.pending { background: var(--unas-amarillo-soft); color: #b38600; }
+
+        .history-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .history-items { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+
+        .history-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .history-amount { font-size: 1.1rem; font-weight: 800; color: var(--unas-verde); }
+
+        .history-actions { display: flex; gap: 0.5rem; }
+
+        .history-btn {
+            padding: 0.4rem 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .history-btn:hover { border-color: var(--unas-verde); color: var(--unas-verde); }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+        .empty-state p { font-size: 0.9rem; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: var(--bg-secondary);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .modal-handle { width: 40px; height: 4px; background: var(--text-muted); border-radius: 2px; margin: 0.6rem auto; opacity: 0.25; }
+        .modal-header { padding: 0.5rem 1.25rem 1rem; }
+        .modal-header h3 { font-size: 1.1rem; font-weight: 700; }
+        .modal-header p { font-size: 0.8rem; color: var(--text-secondary); }
+        .modal-body { padding: 0 1.25rem; max-height: 50vh; overflow-y: auto; }
+
+        .modal-footer {
+            padding: 1rem 1.25rem;
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+            background: var(--bg-primary);
+            border-top: var(--border-glass);
+        }
+
+        /* Checkout items in modal */
+        .checkout-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.6rem;
+        }
+
+        .checkout-item.locked { background: var(--unas-amarillo-soft); }
+
+        .checkout-item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkout-item-icon.auto { background: var(--unas-amarillo); color: white; }
+        .checkout-item-icon.selected { background: var(--unas-verde); color: white; }
+
+        .checkout-item-info { flex: 1; }
+        .checkout-item-title { font-size: 0.85rem; font-weight: 600; }
+        .checkout-item-subtitle { font-size: 0.7rem; color: var(--text-muted); }
+        .checkout-item-price { font-size: 0.95rem; font-weight: 800; color: var(--unas-verde); }
+
+        .summary-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin-top: 0.75rem;
+        }
+
+        .summary-card-title { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem; }
+        .summary-line { display: flex; justify-content: space-between; padding: 0.35rem 0; font-size: 0.85rem; }
+        .summary-line.total { font-size: 1.1rem; font-weight: 800; padding-top: 0.5rem; border-top: 2px dashed var(--border-glass); margin-top: 0.35rem; }
+        .summary-line.total span:last-child { color: var(--unas-verde); }
+
+        /* Success State */
+        .success-state { text-align: center; padding: 2rem 1rem; }
+        .success-icon { width: 72px; height: 72px; background: var(--unas-verde-soft); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
+        .success-icon i { font-size: 2rem; color: var(--unas-verde); }
+        .success-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.35rem; }
+        .success-text { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
+
+        .success-details { background: var(--bg-primary); border-radius: var(--radius-md); padding: 1rem; text-align: left; }
+        .success-row { display: flex; justify-content: space-between; padding: 0.4rem 0; font-size: 0.85rem; }
+        .success-row span:first-child { color: var(--text-muted); }
+
+        .email-sent-notice {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.75rem;
+            background: var(--unas-verde-soft);
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+        }
+
+        .email-sent-notice i { color: var(--unas-verde); }
+        .email-sent-notice span { font-size: 0.8rem; color: var(--unas-verde); }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            .header-user-info { display: block; }
+            .service-list { grid-template-columns: repeat(2, 1fr); }
+            .modal { border-radius: var(--radius-xl); margin: auto; }
+            .modal-overlay { align-items: center; padding: 2rem; }
+        }
+
+        @media (min-width: 1024px) {
+            .content-grid { grid-template-columns: 1fr 340px; }
+            .cart-panel { display: block; }
+            .mobile-cart-bar { display: none; }
+        }
+
+        @media (max-width: 1023px) {
+            .main-layout { padding-bottom: 90px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration">
+        <div class="bg-blob bg-blob-1"></div>
+        <div class="bg-blob bg-blob-2"></div>
+    </div>
+
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="login-logo">UN</div>
+            <h2 class="login-title">UNAS Pagos</h2>
+            <p class="login-subtitle">Sistema de Pagos Virtuales</p>
+
+            <!-- Step 1: DNI -->
+            <div class="login-step active" id="loginStep1">
+                <div class="input-group">
+                    <label class="input-label">Documento de Identidad</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-id-card input-icon"></i>
+                        <input type="text" class="input-field" id="dniInput" placeholder="Ingresa tu DNI" maxlength="8" inputmode="numeric" autocomplete="off">
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="btnValidateDni" onclick="validateDNI()">
+                    <span>Continuar</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <div class="divider">o también puedes</div>
+                <button class="btn btn-text">
+                    <i class="fas fa-building"></i> Pagar como Empresa (RUC)
+                </button>
+            </div>
+
+            <!-- Step 2: Loading RENIEC -->
+            <div class="login-step" id="loginStep2">
+                <div style="padding: 2rem 0; text-align: center;">
+                    <div class="spinner" style="margin: 0 auto 1rem; border-color: var(--unas-verde-soft); border-top-color: var(--unas-verde);"></div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Validando con RENIEC...</p>
+                </div>
+            </div>
+
+            <!-- Step 3: Confirm User + Email -->
+            <div class="login-step" id="loginStep3">
+                <div class="user-preview" id="userPreview">
+                    <div class="user-preview-avatar"><i class="fas fa-user"></i></div>
+                    <div class="user-preview-info">
+                        <h4 id="previewName">-</h4>
+                        <p id="previewDni">DNI: -</p>
+                    </div>
+                    <span class="user-preview-badge" id="previewBadge">-</span>
+                </div>
+
+                <div class="api-data-section" id="apiDataSection">
+                    <div class="api-data-title"><i class="fas fa-database"></i> Datos encontrados en sistemas UNAS</div>
+                    <div class="api-cards" id="apiCards">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <div class="login-alert" id="alertDeudas" style="display: none; margin-top: 1rem;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div class="login-alert-text">
+                        <strong>Se detectaron conceptos obligatorios.</strong><br>
+                        Se agregarán automáticamente a tu carrito.
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-top: 1.25rem;">
+                    <label class="input-label">Correo electrónico</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" class="input-field email" id="emailInput" placeholder="tucorreo@email.com">
+                    </div>
+                    <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem;">
+                        <i class="fas fa-info-circle"></i> Enviaremos tu comprobante a este correo
+                    </p>
+                </div>
+
+                <button class="btn btn-primary" onclick="confirmUser()">
+                    <i class="fas fa-check"></i>
+                    <span>Confirmar y continuar</span>
+                </button>
+                <button class="btn btn-secondary" onclick="goToLoginStep(1)">
+                    <i class="fas fa-arrow-left"></i> Cambiar DNI
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container hidden" id="appContainer">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-inner">
+                <div class="header-left">
+                    <div class="logo">UN</div>
+                    <div class="header-title">
+                        <h1>UNAS Pagos</h1>
+                        <span>Sistema de pagos virtuales</span>
+                    </div>
+                </div>
+                <div class="header-user" onclick="logout()">
+                    <div class="header-user-avatar"><i class="fas fa-user"></i></div>
+                    <div class="header-user-info">
+                        <div class="header-user-name" id="headerUserName">-</div>
+                        <div class="header-user-type" id="headerUserType">-</div>
+                    </div>
+                    <i class="fas fa-sign-out-alt" style="color: var(--text-muted); margin-left: 0.5rem;"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabs -->
+        <nav class="tabs-nav">
+            <div class="tabs-nav-inner">
+                <button class="tab-btn active" onclick="switchTab('servicios', this)"><i class="fas fa-receipt"></i> Servicios</button>
+                <button class="tab-btn" onclick="switchTab('historial', this)"><i class="fas fa-history"></i> Historial</button>
+                <button class="tab-btn" onclick="switchTab('perfil', this)"><i class="fas fa-user"></i> Mi Perfil</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-layout">
+            <!-- Tab: Servicios -->
+            <div class="tab-content active" id="tabServicios">
+                <!-- Welcome Card -->
+                <div class="welcome-card">
+                    <div class="welcome-header">
+                        <div class="welcome-user">
+                            <div class="welcome-avatar"><i class="fas fa-user"></i></div>
+                            <div class="welcome-info">
+                                <h2 id="welcomeName">¡Hola!</h2>
+                                <p id="welcomeMeta">-</p>
+                            </div>
+                        </div>
+                        <span class="welcome-badge" id="welcomeBadge">-</span>
+                    </div>
+                    <div class="welcome-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="statPendientes">0</div>
+                            <div class="stat-label">Pendientes</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="statMonto">S/ 0</div>
+                            <div class="stat-label">Por pagar</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="statPagados">0</div>
+                            <div class="stat-label">Este mes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Status -->
+                <div class="api-status-grid" id="apiStatusGrid">
+                    <!-- Filled by JS -->
+                </div>
+
+                <!-- Alert -->
+                <div class="alert-banner" id="mainAlert" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div class="alert-banner-content">
+                        <div class="alert-banner-title">Conceptos obligatorios detectados</div>
+                        <div class="alert-banner-text" id="alertText">-</div>
+                    </div>
+                </div>
+
+                <!-- Content Grid -->
+                <div class="content-grid">
+                    <!-- Services -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title"><i class="fas fa-list"></i> Conceptos de Pago</h3>
+                            <div class="filter-pills">
+                                <button class="filter-pill active" onclick="setFilter(this, 'all')">Todos</button>
+                                <button class="filter-pill" onclick="setFilter(this, 'pregrado')">Pregrado</button>
+                                <button class="filter-pill" onclick="setFilter(this, 'posgrado')">Posgrado</button>
+                                <button class="filter-pill" onclick="setFilter(this, 'idiomas')">Idiomas</button>
+                            </div>
+                        </div>
+                        <div class="section-body">
+                            <div class="search-bar">
+                                <div class="search-input-wrapper">
+                                    <i class="fas fa-search search-icon"></i>
+                                    <input type="text" class="search-input" placeholder="Buscar concepto..." id="searchInput" oninput="searchServices()">
+                                </div>
+                            </div>
+                            <div class="service-list" id="serviceList">
+                                <!-- Filled by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cart Panel Desktop -->
+                    <div class="cart-panel" id="cartPanel">
+                        <div class="cart-header">
+                            <h3 class="cart-title">Resumen</h3>
+                            <span class="cart-count" id="cartCountDesktop">0</span>
+                        </div>
+                        <div class="cart-body" id="cartBodyDesktop"></div>
+                        <div class="cart-summary" id="cartSummaryDesktop"></div>
+                        <div class="cart-actions">
+                            <button class="btn-checkout" onclick="openCheckout()">
+                                <i class="fas fa-lock"></i> Pagar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Historial -->
+            <div class="tab-content" id="tabHistorial">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3 class="section-title"><i class="fas fa-history"></i> Historial de Pagos</h3>
+                    </div>
+                    <div class="section-body">
+                        <div class="history-list" id="historyList">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Perfil -->
+            <div class="tab-content" id="tabPerfil">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3 class="section-title"><i class="fas fa-user"></i> Mi Perfil</h3>
+                    </div>
+                    <div class="section-body" id="profileContent">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Cart Bar -->
+        <div class="mobile-cart-bar">
+            <div class="mobile-cart-info">
+                <div class="mobile-cart-badge" id="cartCountMobile">0</div>
+                <div class="mobile-cart-text">
+                    <span id="cartItemsText">0 conceptos</span>
+                    <strong id="cartTotalMobile">S/ 0.00</strong>
+                </div>
+            </div>
+            <button class="mobile-cart-btn" onclick="openCheckout()">
+                <i class="fas fa-arrow-right"></i> Pagar
+            </button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal-overlay" id="checkoutModal" onclick="closeModal(this)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-handle"></div>
+            
+            <div id="checkoutContent">
+                <div class="modal-header">
+                    <h3>Confirmar Pago</h3>
+                    <p>Revisa los conceptos y procede al pago</p>
+                </div>
+                <div class="modal-body" id="checkoutItems"></div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="processPayment()">
+                        <i class="fas fa-lock"></i> Pagar S/ <span id="checkoutTotal">0.00</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="checkoutSuccess" style="display: none;">
+                <div class="modal-body">
+                    <div class="success-state">
+                        <div class="success-icon"><i class="fas fa-check"></i></div>
+                        <div class="success-title">¡Pago Exitoso!</div>
+                        <div class="success-text">Tu transacción ha sido procesada</div>
+                        <div class="success-details">
+                            <div class="success-row"><span>N° Operación</span><span><strong id="successOpNumber">-</strong></span></div>
+                            <div class="success-row"><span>Fecha</span><span id="successDate">-</span></div>
+                            <div class="success-row"><span>Monto</span><span style="color: var(--unas-verde); font-weight: 700;" id="successAmount">-</span></div>
+                        </div>
+                        <div class="email-sent-notice">
+                            <i class="fas fa-envelope"></i>
+                            <span>Comprobante enviado a <strong id="successEmail">-</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="downloadVoucher()">
+                        <i class="fas fa-download"></i> Descargar Comprobante
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeCheckout()">Volver al inicio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DATA SIMULATION ====================
+        // Simulating different APIs from UNAS internal systems
+
+        const MOCK_USERS = {
+            '72345678': {
+                dni: '72345678',
+                nombres: 'MARIA FERNANDA',
+                apellidos: 'QUISPE HUAMAN',
+                tipo: 'pregrado',
+                codigo: '2019230045',
+                facultad: 'Ingeniería en Informática y Sistemas',
+                email_institucional: 'mfquispe@unas.edu.pe',
+                // API Académico
+                academico: {
+                    ciclo_actual: '2024-II',
+                    creditos_matriculados: 18,
+                    cursos_jalados: 2,
+                    promedio: 13.5
+                },
+                // API Deudas
+                deudas: {
+                    tiene_deuda: true,
+                    conceptos_pendientes: ['Artes y Cultura', 'Derecho de Examen'],
+                    monto_total: 100
+                },
+                // API Biblioteca
+                biblioteca: {
+                    libros_prestados: 2,
+                    multas: 0
+                },
+                // API Centro de Idiomas
+                idiomas: {
+                    inscrito: false,
+                    nivel: null
+                }
+            },
+            '45678912': {
+                dni: '45678912',
+                nombres: 'CARLOS ALBERTO',
+                apellidos: 'RODRIGUEZ MENDOZA',
+                tipo: 'posgrado',
+                codigo: '2022130012',
+                programa: 'Maestría en Gestión Pública',
+                email_institucional: 'carodriguez@unas.edu.pe',
+                academico: {
+                    ciclo_actual: '2024-II',
+                    creditos_matriculados: 12,
+                    cursos_jalados: 0,
+                    promedio: 16.2
+                },
+                deudas: {
+                    tiene_deuda: false,
+                    conceptos_pendientes: [],
+                    monto_total: 0
+                },
+                biblioteca: {
+                    libros_prestados: 5,
+                    multas: 15
+                },
+                idiomas: {
+                    inscrito: true,
+                    nivel: 'Inglés Intermedio II'
+                }
+            },
+            '78912345': {
+                dni: '78912345',
+                nombres: 'LUCIA ESPERANZA',
+                apellidos: 'TORRES SILVA',
+                tipo: 'idiomas',
+                codigo: 'EXT-2024-0089',
+                programa: 'Centro de Idiomas',
+                email_institucional: null,
+                academico: null,
+                deudas: {
+                    tiene_deuda: false,
+                    conceptos_pendientes: [],
+                    monto_total: 0
+                },
+                biblioteca: null,
+                idiomas: {
+                    inscrito: true,
+                    nivel: 'Inglés Básico I'
+                }
+            }
+        };
+
+        const SERVICES = [
+            { id: 's1', title: 'Matrícula Regular Pregrado - 2024-II', price: 180, type: 'pregrado', desc: 'Presentarse en DIAA' },
+            { id: 's2', title: 'Reserva de Matrícula', price: 25, type: 'pregrado', desc: 'Reserva por semestre' },
+            { id: 's3', title: 'Constancia de Estudios', price: 30, type: 'pregrado', desc: 'Trámite 3 días hábiles' },
+            { id: 's4', title: 'Matrícula Posgrado - Gestión Pública', price: 200, priceDiscount: 160, type: 'posgrado', desc: 'Descuento maestrista -20%' },
+            { id: 's5', title: 'Pensión Mensual Posgrado', price: 300, type: 'posgrado', desc: 'Cuota mensual' },
+            { id: 's6', title: 'Sustentación de Tesis', price: 450, type: 'posgrado', desc: 'Derecho de sustentación' },
+            { id: 's7', title: 'Matrícula Inglés Básico I', price: 150, type: 'idiomas', desc: 'Centro de Idiomas' },
+            { id: 's8', title: 'Examen de Suficiencia Inglés', price: 80, type: 'idiomas', desc: 'Certificación' },
+            { id: 's9', title: 'Matrícula Portugués Básico', price: 120, type: 'idiomas', desc: 'Centro de Idiomas' }
+        ];
+
+        // ==================== STATE ====================
+        let currentUser = null;
+        let userEmail = '';
+        let cartItems = [];
+        let sessionHistory = [];
+
+        // ==================== LOGIN FLOW ====================
+        function goToLoginStep(step) {
+            document.querySelectorAll('.login-step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`loginStep${step}`).classList.add('active');
+        }
+
+        function validateDNI() {
+            const dni = document.getElementById('dniInput').value.trim();
+            if (dni.length !== 8) {
+                alert('Ingresa un DNI válido de 8 dígitos');
+                return;
+            }
+
+            goToLoginStep(2); // Show loading
+
+            // Simulate API call to RENIEC + internal systems
+            setTimeout(() => {
+                const user = MOCK_USERS[dni];
+                if (user) {
+                    currentUser = user;
+                    showUserPreview(user);
+                    goToLoginStep(3);
+                } else {
+                    // User not found - could be external
+                    currentUser = {
+                        dni: dni,
+                        nombres: 'USUARIO',
+                        apellidos: 'EXTERNO',
+                        tipo: 'externo',
+                        codigo: `EXT-${Date.now()}`,
+                        academico: null,
+                        deudas: { tiene_deuda: false, conceptos_pendientes: [], monto_total: 0 },
+                        biblioteca: null,
+                        idiomas: null
+                    };
+                    showUserPreview(currentUser);
+                    goToLoginStep(3);
+                }
+            }, 1500);
+        }
+
+        function showUserPreview(user) {
+            document.getElementById('previewName').textContent = `${user.nombres} ${user.apellidos}`;
+            document.getElementById('previewDni').textContent = `DNI: ${user.dni}`;
+            
+            const badges = {
+                'pregrado': 'Pregrado',
+                'posgrado': 'Maestrista',
+                'idiomas': 'Idiomas',
+                'externo': 'Externo'
+            };
+            document.getElementById('previewBadge').textContent = badges[user.tipo] || 'Usuario';
+
+            // Show API data
+            let apiCardsHtml = '';
+
+            if (user.academico) {
+                apiCardsHtml += `
+                    <div class="api-card">
+                        <div class="api-card-icon academic"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="api-card-info">
+                            <div class="api-card-label">Sistema Académico</div>
+                            <div class="api-card-value">Ciclo ${user.academico.ciclo_actual} • ${user.academico.creditos_matriculados} créditos</div>
+                        </div>
+                        <span class="api-card-status ${user.academico.cursos_jalados > 0 ? 'warning' : 'ok'}">
+                            ${user.academico.cursos_jalados > 0 ? user.academico.cursos_jalados + ' jalados' : 'OK'}
+                        </span>
+                    </div>
+                `;
+            }
+
+            if (user.deudas) {
+                apiCardsHtml += `
+                    <div class="api-card">
+                        <div class="api-card-icon financial"><i class="fas fa-file-invoice-dollar"></i></div>
+                        <div class="api-card-info">
+                            <div class="api-card-label">Sistema de Deudas</div>
+                            <div class="api-card-value">${user.deudas.tiene_deuda ? 'S/ ' + user.deudas.monto_total + ' pendiente' : 'Sin deudas pendientes'}</div>
+                        </div>
+                        <span class="api-card-status ${user.deudas.tiene_deuda ? 'warning' : 'ok'}">
+                            ${user.deudas.tiene_deuda ? 'Pendiente' : 'OK'}
+                        </span>
+                    </div>
+                `;
+            }
+
+            if (user.biblioteca) {
+                apiCardsHtml += `
+                    <div class="api-card">
+                        <div class="api-card-icon library"><i class="fas fa-book"></i></div>
+                        <div class="api-card-info">
+                            <div class="api-card-label">Biblioteca</div>
+                            <div class="api-card-value">${user.biblioteca.libros_prestados} libros • ${user.biblioteca.multas > 0 ? 'S/ ' + user.biblioteca.multas + ' multa' : 'Sin multas'}</div>
+                        </div>
+                        <span class="api-card-status ${user.biblioteca.multas > 0 ? 'warning' : 'ok'}">
+                            ${user.biblioteca.multas > 0 ? 'Multa' : 'OK'}
+                        </span>
+                    </div>
+                `;
+            }
+
+            if (user.idiomas) {
+                apiCardsHtml += `
+                    <div class="api-card">
+                        <div class="api-card-icon idiomas"><i class="fas fa-language"></i></div>
+                        <div class="api-card-info">
+                            <div class="api-card-label">Centro de Idiomas</div>
+                            <div class="api-card-value">${user.idiomas.inscrito ? user.idiomas.nivel : 'No inscrito'}</div>
+                        </div>
+                        <span class="api-card-status ok">${user.idiomas.inscrito ? 'Activo' : 'N/A'}</span>
+                    </div>
+                `;
+            }
+
+            document.getElementById('apiCards').innerHTML = apiCardsHtml || '<p style="font-size: 0.8rem; color: var(--text-muted);">No se encontraron registros en sistemas internos</p>';
+
+            // Show alert for deudas
+            if (user.deudas && user.deudas.tiene_deuda) {
+                document.getElementById('alertDeudas').style.display = 'flex';
+            } else {
+                document.getElementById('alertDeudas').style.display = 'none';
+            }
+
+            // Pre-fill email
+            if (user.email_institucional) {
+                document.getElementById('emailInput').value = user.email_institucional;
+            }
+        }
+
+        function confirmUser() {
+            const email = document.getElementById('emailInput').value.trim();
+            if (!email || !email.includes('@')) {
+                alert('Ingresa un correo válido');
+                return;
+            }
+
+            userEmail = email;
+            initializeApp();
+        }
+
+        function initializeApp() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+
+            // Update header
+            document.getElementById('headerUserName').textContent = currentUser.nombres.split(' ')[0];
+            const tipos = { pregrado: 'Pregrado', posgrado: 'Maestrista', idiomas: 'Idiomas', externo: 'Externo' };
+            document.getElementById('headerUserType').textContent = tipos[currentUser.tipo];
+
+            // Update welcome
+            document.getElementById('welcomeName').textContent = `¡Hola, ${currentUser.nombres.split(' ')[0]}!`;
+            document.getElementById('welcomeMeta').textContent = `DNI: ${currentUser.dni} • ${currentUser.codigo}`;
+            document.getElementById('welcomeBadge').textContent = tipos[currentUser.tipo];
+
+            // Add auto items for deudas
+            cartItems = [];
+            if (currentUser.deudas && currentUser.deudas.tiene_deuda) {
+                currentUser.deudas.conceptos_pendientes.forEach((concepto, i) => {
+                    cartItems.push({
+                        id: `auto${i}`,
+                        title: concepto,
+                        price: 50,
+                        auto: true
+                    });
+                });
+
+                document.getElementById('mainAlert').style.display = 'flex';
+                document.getElementById('alertText').textContent = `Por cursos jalados: ${currentUser.deudas.conceptos_pendientes.join(' + ')}`;
+            }
+
+            // Update stats
+            document.getElementById('statPendientes').textContent = cartItems.length;
+            document.getElementById('statMonto').textContent = `S/ ${cartItems.reduce((s, i) => s + i.price, 0)}`;
+            document.getElementById('statPagados').textContent = sessionHistory.length;
+
+            // Render API status cards
+            renderApiStatus();
+
+            // Render services
+            renderServices();
+
+            // Update cart
+            updateAllCarts();
+
+            // Render history
+            renderHistory();
+
+            // Render profile
+            renderProfile();
+        }
+
+        function renderApiStatus() {
+            let html = '';
+
+            if (currentUser.academico) {
+                html += `
+                    <div class="api-status-card">
+                        <div class="api-status-icon academic"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="api-status-info">
+                            <div class="api-status-title">Sistema Académico</div>
+                            <div class="api-status-value">Promedio: ${currentUser.academico.promedio} • ${currentUser.academico.cursos_jalados} jalados</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (currentUser.biblioteca && currentUser.biblioteca.multas > 0) {
+                html += `
+                    <div class="api-status-card">
+                        <div class="api-status-icon biblioteca"><i class="fas fa-book"></i></div>
+                        <div class="api-status-info">
+                            <div class="api-status-title">Biblioteca</div>
+                            <div class="api-status-value">Multa pendiente: S/ ${currentUser.biblioteca.multas}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('apiStatusGrid').innerHTML = html;
+        }
+
+        function renderServices() {
+            const list = document.getElementById('serviceList');
+            let html = '';
+
+            // Auto items first
+            cartItems.filter(i => i.auto).forEach(item => {
+                html += `
+                    <div class="service-card auto-added selected" data-id="${item.id}" data-auto="true">
+                        <div>
+                            <div class="service-title">${item.title}</div>
+                            <div class="service-meta">
+                                <span class="service-tag auto">Obligatorio</span>
+                            </div>
+                        </div>
+                        <div class="service-right">
+                            <div class="service-price">S/ ${item.price.toFixed(2)}</div>
+                            <div class="service-checkbox"><i class="fas fa-lock"></i></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Regular services
+            SERVICES.forEach(service => {
+                const isSelected = cartItems.some(i => i.id === service.id);
+                html += `
+                    <div class="service-card ${isSelected ? 'selected' : ''}" data-id="${service.id}" data-type="${service.type}" onclick="toggleService('${service.id}')">
+                        <div>
+                            <div class="service-title">${service.title}</div>
+                            <div class="service-meta">
+                                <span class="service-tag ${service.type}">${service.type.charAt(0).toUpperCase() + service.type.slice(1)}</span>
+                            </div>
+                        </div>
+                        <div class="service-right">
+                            <div class="service-price">${service.priceDiscount ? `<span style="text-decoration: line-through; color: var(--text-muted); font-size: 0.75rem;">S/ ${service.price}</span> S/ ${service.priceDiscount}` : `S/ ${service.price.toFixed(2)}`}</div>
+                            <div class="service-checkbox"><i class="fas fa-check"></i></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            list.innerHTML = html;
+        }
+
+        function toggleService(id) {
+            const service = SERVICES.find(s => s.id === id);
+            if (!service) return;
+
+            const exists = cartItems.find(i => i.id === id);
+            if (exists) {
+                cartItems = cartItems.filter(i => i.id !== id);
+            } else {
+                cartItems.push({
+                    id: service.id,
+                    title: service.title,
+                    price: service.priceDiscount || service.price,
+                    auto: false
+                });
+            }
+
+            renderServices();
+            updateAllCarts();
+        }
+
+        function updateAllCarts() {
+            const total = cartItems.reduce((s, i) => s + i.price, 0);
+            const count = cartItems.length;
+
+            // Mobile
+            document.getElementById('cartCountMobile').textContent = count;
+            document.getElementById('cartItemsText').textContent = `${count} concepto${count !== 1 ? 's' : ''}`;
+            document.getElementById('cartTotalMobile').textContent = `S/ ${total.toFixed(2)}`;
+
+            // Desktop
+            document.getElementById('cartCountDesktop').textContent = count;
+
+            let bodyHtml = '';
+            cartItems.forEach(item => {
+                bodyHtml += `
+                    <div class="cart-item">
+                        <div class="cart-item-icon ${item.auto ? 'auto' : 'selected'}"><i class="fas fa-${item.auto ? 'lock' : 'check'}"></i></div>
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.title}</div>
+                        </div>
+                        <div class="cart-item-price">S/ ${item.price.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('cartBodyDesktop').innerHTML = bodyHtml || '<div class="empty-state" style="padding: 1rem;"><p>Sin conceptos</p></div>';
+
+            document.getElementById('cartSummaryDesktop').innerHTML = `
+                <div class="summary-row"><span>Subtotal</span><span>S/ ${total.toFixed(2)}</span></div>
+                <div class="summary-row total"><span>Total</span><span>S/ ${total.toFixed(2)}</span></div>
+            `;
+
+            // Stats
+            document.getElementById('statPendientes').textContent = count;
+            document.getElementById('statMonto').textContent = `S/ ${total}`;
+        }
+
+        // ==================== TABS ====================
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.add('active');
+        }
+
+        // ==================== FILTERS & SEARCH ====================
+        function setFilter(btn, type) {
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.service-card').forEach(card => {
+                if (type === 'all' || card.dataset.type === type || card.dataset.auto === 'true') {
+                    card.style.display = 'grid';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function searchServices() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.service-card').forEach(card => {
+                const title = card.querySelector('.service-title').textContent.toLowerCase();
+                card.style.display = title.includes(query) ? 'grid' : 'none';
+            });
+        }
+
+        // ==================== CHECKOUT ====================
+        function openCheckout() {
+            if (cartItems.length === 0) {
+                alert('Selecciona al menos un concepto');
+                return;
+            }
+
+            const total = cartItems.reduce((s, i) => s + i.price, 0);
+            let html = '';
+            cartItems.forEach(item => {
+                html += `
+                    <div class="checkout-item ${item.auto ? 'locked' : ''}">
+                        <div class="checkout-item-icon ${item.auto ? 'auto' : 'selected'}"><i class="fas fa-${item.auto ? 'lock' : 'receipt'}"></i></div>
+                        <div class="checkout-item-info">
+                            <div class="checkout-item-title">${item.title}</div>
+                            <div class="checkout-item-subtitle">${item.auto ? 'Obligatorio' : 'Seleccionado'}</div>
+                        </div>
+                        <div class="checkout-item-price">S/ ${item.price.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            html += `
+                <div class="summary-card">
+                    <div class="summary-card-title">Resumen</div>
+                    <div class="summary-line"><span>Conceptos (${cartItems.length})</span><span>S/ ${total.toFixed(2)}</span></div>
+                    <div class="summary-line total"><span>Total</span><span>S/ ${total.toFixed(2)}</span></div>
+                </div>
+            `;
+            document.getElementById('checkoutItems').innerHTML = html;
+            document.getElementById('checkoutTotal').textContent = total.toFixed(2);
+
+            document.getElementById('checkoutContent').style.display = 'block';
+            document.getElementById('checkoutSuccess').style.display = 'none';
+            document.getElementById('checkoutModal').classList.add('active');
+        }
+
+        function processPayment() {
+            const total = cartItems.reduce((s, i) => s + i.price, 0);
+            const opNumber = `PAY-${Date.now().toString().slice(-8)}`;
+
+            // Add to history
+            sessionHistory.unshift({
+                id: opNumber,
+                date: new Date(),
+                items: [...cartItems],
+                total: total,
+                status: 'paid'
+            });
+
+            // Show success
+            document.getElementById('successOpNumber').textContent = opNumber;
+            document.getElementById('successDate').textContent = new Date().toLocaleString('es-PE');
+            document.getElementById('successAmount').textContent = `S/ ${total.toFixed(2)}`;
+            document.getElementById('successEmail').textContent = userEmail;
+
+            document.getElementById('checkoutContent').style.display = 'none';
+            document.getElementById('checkoutSuccess').style.display = 'block';
+
+            // Clear non-auto items
+            cartItems = cartItems.filter(i => i.auto);
+            updateAllCarts();
+            renderServices();
+            renderHistory();
+            document.getElementById('statPagados').textContent = sessionHistory.length;
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').classList.remove('active');
+        }
+
+        function closeModal(overlay) {
+            overlay.classList.remove('active');
+        }
+
+        function downloadVoucher() {
+            alert('Descargando comprobante PDF...\n\nEn producción esto generaría un PDF real.');
+            closeCheckout();
+        }
+
+        // ==================== HISTORY ====================
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            if (sessionHistory.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-receipt"></i>
+                        <p>No tienes pagos en esta sesión</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            sessionHistory.forEach(h => {
+                html += `
+                    <div class="history-card">
+                        <div class="history-header">
+                            <span class="history-date">${h.date.toLocaleString('es-PE')}</span>
+                            <span class="history-status paid">Pagado</span>
+                        </div>
+                        <div class="history-title">Pago #${h.id}</div>
+                        <div class="history-items">${h.items.map(i => i.title).join(', ')}</div>
+                        <div class="history-footer">
+                            <div class="history-amount">S/ ${h.total.toFixed(2)}</div>
+                            <div class="history-actions">
+                                <button class="history-btn"><i class="fas fa-download"></i> PDF</button>
+                                <button class="history-btn"><i class="fas fa-envelope"></i> Reenviar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        // ==================== PROFILE ====================
+        function renderProfile() {
+            const content = document.getElementById('profileContent');
+            content.innerHTML = `
+                <div style="display: grid; gap: 1rem;">
+                    <div class="api-card" style="padding: 1rem;">
+                        <div class="api-card-icon academic"><i class="fas fa-user"></i></div>
+                        <div class="api-card-info">
+                            <div class="api-card-label">Nombre Completo</div>
+                            <div class="api-card-value">${currentUser.nombres} ${currentUser.apellidos}</div>
+                        </div>
+                    </div>
+                    <div class="api-card" style="padding: 1rem;">
+                        <div class="api-card-icon financial"><i class="fas fa-id-card"></i></div>
+                        <div class="api-card-info">
+                            <div class="api-card-label">DNI</div>
+                            <div class="api-card-value">${currentUser.dni}</div>
+                        </div>
+                    </div>
+                    <div class="api-card" style="padding: 1rem;">
+                        <div class="api-card-icon idiomas"><i class="fas fa-envelope"></i></div>
+                        <div class="api-card-info">
+                            <div class="api-card-label">Correo de Sesión</div>
+                            <div class="api-card-value">${userEmail}</div>
+                        </div>
+                    </div>
+                    <div class="api-card" style="padding: 1rem;">
+                        <div class="api-card-icon library"><i class="fas fa-hashtag"></i></div>
+                        <div class="api-card-info">
+                            <div class="api-card-label">Código</div>
+                            <div class="api-card-value">${currentUser.codigo}</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" style="margin-top: 1.5rem;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            `;
+        }
+
+        function logout() {
+            if (confirm('¿Cerrar sesión? Se perderá el historial temporal.')) {
+                currentUser = null;
+                userEmail = '';
+                cartItems = [];
+                sessionHistory = [];
+                document.getElementById('appContainer').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('dniInput').value = '';
+                document.getElementById('emailInput').value = '';
+                goToLoginStep(1);
+            }
+        }
+
+        // ==================== INIT ====================
+        document.getElementById('dniInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') validateDNI();
+        });
+    </script>
+</body>
+</html>
