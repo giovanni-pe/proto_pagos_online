@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UNAS Pagos - Sistema Inteligente</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Background Decoration -->
+    <div class="bg-decoration">
+        <div class="bg-blob bg-blob-1"></div>
+        <div class="bg-blob bg-blob-2"></div>
+    </div>
+
+    <!-- ==================== LOGIN SCREEN ==================== -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="login-logo">UN</div>
+            <h2 class="login-title">UNAS Pagos</h2>
+            <p class="login-subtitle">Sistema de Pagos Virtuales</p>
+
+            <!-- Step 1: DNI -->
+            <div class="login-step active" id="loginStep1">
+                <div class="input-group">
+                    <label class="input-label">Documento de Identidad</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-id-card input-icon"></i>
+                        <input type="text" class="input-field" id="dniInput" placeholder="Ingresa tu DNI" maxlength="8" inputmode="numeric" autocomplete="off">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="validateDNI()">
+                    <span>Continuar</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <div class="divider">o también puedes</div>
+                <button class="btn btn-text">
+                    <i class="fas fa-building"></i> Pagar como Empresa (RUC)
+                </button>
+            </div>
+
+            <!-- Step 2: Loading RENIEC -->
+            <div class="login-step" id="loginStep2">
+                <div style="padding: 2rem 0; text-align: center;">
+                    <div class="spinner dark" style="margin: 0 auto 1rem; width: 40px; height: 40px;"></div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Validando con RENIEC...</p>
+                    <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem;">Consultando sistemas internos UNAS</p>
+                </div>
+            </div>
+
+            <!-- Step 3: Confirm User + Email -->
+            <div class="login-step" id="loginStep3">
+                <div class="user-preview" id="userPreview">
+                    <div class="user-preview-avatar"><i class="fas fa-user"></i></div>
+                    <div class="user-preview-info">
+                        <h4 id="previewName">-</h4>
+                        <p id="previewDni">DNI: -</p>
+                    </div>
+                    <span class="user-preview-badge" id="previewBadge">-</span>
+                </div>
+
+                <div class="api-data-section" id="apiDataSection">
+                    <div class="api-data-title"><i class="fas fa-database"></i> Datos encontrados en sistemas UNAS</div>
+                    <div class="api-cards" id="apiCards"></div>
+                </div>
+
+                <div class="login-alert" id="alertDeudas" style="display: none; margin-top: 1rem;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div class="login-alert-text">
+                        <strong>Se detectaron conceptos obligatorios.</strong><br>
+                        Se agregarán automáticamente a tu carrito.
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-top: 1.25rem;">
+                    <label class="input-label">Correo electrónico</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" class="input-field email" id="emailInput" placeholder="tucorreo@email.com">
+                    </div>
+                    <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem;">
+                        <i class="fas fa-info-circle"></i> Enviaremos tu comprobante a este correo
+                    </p>
+                </div>
+
+                <button class="btn btn-primary" onclick="confirmUser()">
+                    <i class="fas fa-check"></i>
+                    <span>Confirmar y continuar</span>
+                </button>
+                <button class="btn btn-secondary" onclick="goToLoginStep(1)">
+                    <i class="fas fa-arrow-left"></i> Cambiar DNI
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN APP ==================== -->
+    <div class="app-container hidden" id="appContainer">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-inner">
+                <div class="header-left">
+                    <div class="logo">UN</div>
+                    <div class="header-title">
+                        <h1>UNAS Pagos</h1>
+                        <span>Sistema de pagos virtuales</span>
+                    </div>
+                </div>
+                <div class="header-user" onclick="logout()">
+                    <div class="header-user-avatar"><i class="fas fa-user"></i></div>
+                    <div class="header-user-info">
+                        <div class="header-user-name" id="headerUserName">-</div>
+                        <div class="header-user-type" id="headerUserType">-</div>
+                    </div>
+                    <i class="fas fa-sign-out-alt" style="color: var(--text-muted); margin-left: 0.5rem;"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabs -->
+        <nav class="tabs-nav">
+            <div class="tabs-nav-inner">
+                <button class="tab-btn active" onclick="switchTab('servicios', this)"><i class="fas fa-receipt"></i> Servicios</button>
+                <button class="tab-btn" onclick="switchTab('historial', this)"><i class="fas fa-history"></i> Historial</button>
+                <button class="tab-btn" onclick="switchTab('perfil', this)"><i class="fas fa-user"></i> Mi Perfil</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-layout">
+            <!-- Tab: Servicios -->
+            <div class="tab-content active" id="tabServicios">
+                <!-- Welcome Card -->
+                <div class="welcome-card">
+                    <div class="welcome-header">
+                        <div class="welcome-user">
+                            <div class="welcome-avatar"><i class="fas fa-user"></i></div>
+                            <div class="welcome-info">
+                                <h2 id="welcomeName">¡Hola!</h2>
+                                <p id="welcomeMeta">-</p>
+                            </div>
+                        </div>
+                        <span class="welcome-badge" id="welcomeBadge">-</span>
+                    </div>
+                    <div class="welcome-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="statPendientes">0</div>
+                            <div class="stat-label">Pendientes</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="statMonto">S/ 0</div>
+                            <div class="stat-label">Por pagar</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="statPagados">0</div>
+                            <div class="stat-label">Este mes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Status -->
+                <div class="api-status-grid" id="apiStatusGrid"></div>
+
+                <!-- Alert -->
+                <div class="alert-banner" id="mainAlert" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div class="alert-banner-content">
+                        <div class="alert-banner-title">Conceptos obligatorios detectados</div>
+                        <div class="alert-banner-text" id="alertText">-</div>
+                    </div>
+                </div>
+
+                <!-- Content Grid -->
+                <div class="content-grid">
+                    <!-- Services -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title"><i class="fas fa-list"></i> Conceptos de Pago</h3>
+                            <div class="filter-pills">
+                                <button class="filter-pill active" onclick="setFilter(this, 'all')">Todos</button>
+                                <button class="filter-pill" onclick="setFilter(this, 'pregrado')">Pregrado</button>
+                                <button class="filter-pill" onclick="setFilter(this, 'posgrado')">Posgrado</button>
+                                <button class="filter-pill" onclick="setFilter(this, 'idiomas')">Idiomas</button>
+                            </div>
+                        </div>
+                        <div class="section-body">
+                            <div class="search-bar">
+                                <div class="search-input-wrapper">
+                                    <i class="fas fa-search search-icon"></i>
+                                    <input type="text" class="search-input" placeholder="Buscar concepto..." id="searchInput" oninput="searchServices()">
+                                </div>
+                            </div>
+                            <div class="service-list" id="serviceList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Cart Panel Desktop -->
+                    <div class="cart-panel" id="cartPanel">
+                        <div class="cart-header">
+                            <h3 class="cart-title">Resumen</h3>
+                            <span class="cart-count" id="cartCountDesktop">0</span>
+                        </div>
+                        <div class="cart-body" id="cartBodyDesktop"></div>
+                        <div class="cart-summary" id="cartSummaryDesktop"></div>
+                        <div class="cart-actions">
+                            <button class="btn-checkout" onclick="openCheckout()">
+                                <i class="fas fa-lock"></i> Pagar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Historial -->
+            <div class="tab-content" id="tabHistorial">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3 class="section-title"><i class="fas fa-history"></i> Historial de Pagos</h3>
+                    </div>
+                    <div class="section-body">
+                        <div class="history-list" id="historyList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Perfil -->
+            <div class="tab-content" id="tabPerfil">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3 class="section-title"><i class="fas fa-user"></i> Mi Perfil</h3>
+                    </div>
+                    <div class="section-body" id="profileContent"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Cart Bar -->
+        <div class="mobile-cart-bar">
+            <div class="mobile-cart-info">
+                <div class="mobile-cart-badge" id="cartCountMobile">0</div>
+                <div class="mobile-cart-text">
+                    <span id="cartItemsText">0 conceptos</span>
+                    <strong id="cartTotalMobile">S/ 0.00</strong>
+                </div>
+            </div>
+            <button class="mobile-cart-btn" onclick="openCheckout()">
+                <i class="fas fa-arrow-right"></i> Pagar
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== CHECKOUT MODAL ==================== -->
+    <div class="modal-overlay" id="checkoutModal" onclick="closeModal(this)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-handle"></div>
+            
+            <!-- Step 1: Summary -->
+            <div id="checkoutStep1">
+                <div class="modal-header">
+                    <h3>Resumen de tu Pago</h3>
+                    <p>Revisa los conceptos seleccionados</p>
+                </div>
+                <div class="modal-body" id="checkoutItems"></div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="goToPayment()">
+                        <i class="fas fa-credit-card"></i> Pagar S/ <span id="checkoutTotal">0.00</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Niubiz Payment -->
+            <div id="checkoutStep2" style="display: none;">
+                <div class="modal-header">
+                    <h3>Pago con Tarjeta</h3>
+                    <p>Ingresa los datos de tu tarjeta</p>
+                </div>
+                <div class="modal-body">
+                    <div class="niubiz-container">
+                        <div class="niubiz-header">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Niubiz_logo.svg/200px-Niubiz_logo.svg.png" alt="Niubiz" class="niubiz-logo" onerror="this.outerHTML='<span style=&quot;font-size: 1.5rem; font-weight: 800; color: #1a1f71;&quot;>NIUBIZ</span>'">
+                            <div class="niubiz-secure">
+                                <i class="fas fa-lock"></i>
+                                <span>Pago Seguro</span>
+                            </div>
+                        </div>
+
+                        <div class="card-form">
+                            <div class="card-input-group">
+                                <label>Número de Tarjeta</label>
+                                <i class="fas fa-credit-card card-input-icon"></i>
+                                <input type="text" class="card-input card-number" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric">
+                            </div>
+
+                            <div class="card-input-group">
+                                <label>Nombre del Titular</label>
+                                <i class="fas fa-user card-input-icon"></i>
+                                <input type="text" class="card-input" id="cardName" placeholder="Como aparece en la tarjeta" style="text-transform: uppercase;">
+                            </div>
+
+                            <div class="card-row">
+                                <div class="card-input-group">
+                                    <label>Fecha Exp.</label>
+                                    <i class="fas fa-calendar card-input-icon"></i>
+                                    <input type="text" class="card-input" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+                                </div>
+                                <div class="card-input-group">
+                                    <label>CVV</label>
+                                    <i class="fas fa-lock card-input-icon"></i>
+                                    <input type="password" class="card-input" id="cardCvv" placeholder="•••" maxlength="4" inputmode="numeric">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-brands">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/100px-Visa_Inc._logo.svg.png" alt="Visa" onerror="this.outerHTML='<span style=&quot;color:#1a1f71;font-weight:bold;&quot;>VISA</span>'">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/100px-Mastercard-logo.svg.png" alt="Mastercard" onerror="this.outerHTML='<span style=&quot;color:#eb001b;font-weight:bold;&quot;>MC</span>'">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/100px-American_Express_logo_%282018%29.svg.png" alt="Amex" onerror="this.outerHTML='<span style=&quot;color:#006fcf;font-weight:bold;&quot;>AMEX</span>'">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Diners_Club_Logo3.svg/100px-Diners_Club_Logo3.svg.png" alt="Diners" onerror="this.outerHTML='<span style=&quot;color:#004e94;font-weight:bold;&quot;>DINERS</span>'">
+                        </div>
+                    </div>
+
+                    <div class="summary-card" style="margin-top: 1rem;">
+                        <div class="summary-card-title">Total a Pagar</div>
+                        <div class="summary-line total" style="border: none; padding: 0; margin: 0;">
+                            <span>Monto</span>
+                            <span>S/ <span id="niubizTotal">0.00</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-niubiz" onclick="processNiubizPayment()">
+                        <i class="fas fa-lock"></i> Pagar con Niubiz
+                    </button>
+                    <button class="btn btn-secondary" onclick="goBackToSummary()">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Success -->
+            <div id="checkoutSuccess" style="display: none;">
+                <div class="modal-body">
+                    <div class="success-state">
+                        <div class="success-icon"><i class="fas fa-check"></i></div>
+                        <div class="success-title">¡Pago Exitoso!</div>
+                        <div class="success-text">Tu transacción ha sido procesada por Niubiz</div>
+                        <div class="success-details">
+                            <div class="success-row"><span>N° Operación</span><span><strong id="successOpNumber">-</strong></span></div>
+                            <div class="success-row"><span>ID Transacción</span><span id="successTxnId">-</span></div>
+                            <div class="success-row"><span>Fecha</span><span id="successDate">-</span></div>
+                            <div class="success-row"><span>Monto</span><span style="color: var(--unas-verde); font-weight: 700;" id="successAmount">-</span></div>
+                            <div class="success-row"><span>Tarjeta</span><span id="successCard">-</span></div>
+                        </div>
+                        <div class="email-sent-notice">
+                            <i class="fas fa-envelope"></i>
+                            <span>Comprobante enviado a <strong id="successEmail">-</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="downloadTicket()">
+                        <i class="fas fa-download"></i> Descargar Ticket
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeCheckout()">Volver al inicio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PROCESSING OVERLAY ==================== -->
+    <div class="processing-overlay" id="processingOverlay">
+        <div class="processing-spinner"></div>
+        <div class="processing-text">Procesando pago...</div>
+        <div class="processing-subtext">Conectando con Niubiz de forma segura</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+</body>
+</html>

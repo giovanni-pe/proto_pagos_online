@@ -1,0 +1,17 @@
+DNIs de Prueba
+
+DNI: 72345678
+Tipo: Pregrado
+Características: 2 cursos jalados → conceptos auto-agregados
+
+DNI: 45678912
+Tipo: Posgrado
+Características: Sin deudas, multa biblioteca S/15
+
+DNI: 78912345
+Tipo: Idiomas
+Características: Usuario externo, sin sistema académico
+
+DNI: Cualquier otro
+Tipo: Externo
+Características: Usuario nuevo sin registros
