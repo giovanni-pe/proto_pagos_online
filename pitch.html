@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Moderno de Tesorería UNAS - Pitch Interactivo</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: rgb(26, 187, 156);
+            --primary-light: rgb(72, 230, 198);
+            --primary-dark: rgb(20, 150, 125);
+            --secondary: #0d6efd;
+            --secondary-light: #4d94ff;
+            --secondary-dark: #0a58ca;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --success: #28a745;
+            --info: #0dcaf0;
+            --dark: #212529;
+            --light: #f8f9fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* Slides */
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 50px;
+            position: relative;
+        }
+        
+        .slide-content {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 1200px;
+            width: 100%;
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 30px;
+        }
+        
+        h3 {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+        
+        h4 {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .card-problem {
+            border-left: 5px solid var(--warning);
+            background: #fff9e6;
+        }
+        
+        .card-solution {
+            border-left: 5px solid var(--info);
+            background: #e6f7ff;
+        }
+        
+        .card-benefit {
+            border-left: 5px solid var(--primary);
+            background: #e6fff9;
+        }
+        
+        /* Grid System */
+        .grid {
+            display: grid;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+        
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+        
+        /* Stats */
+        .stat-box {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(26, 187, 156, 0.3);
+        }
+        
+        .stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        /* Icons */
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(26, 187, 156, 0.3);
+        }
+        
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .comparison-table thead {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        
+        .comparison-table th {
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .comparison-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .comparison-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .before {
+            color: var(--danger);
+            font-weight: bold;
+        }
+        
+        .after {
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        /* Architecture Diagram */
+        .architecture-diagram {
+            background: #f8f9fa;
+            border: 3px solid var(--secondary);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .architecture-layer {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .architecture-layer::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -22px;
+            width: 2px;
+            height: 20px;
+            background: var(--primary);
+        }
+        
+        .architecture-layer:first-child::before {
+            display: none;
+        }
+        
+        .layer-title {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        /* Prototype Mockup */
+        .mockup {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .mockup-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mockup-body {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            min-height: 200px;
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .search-bar button {
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .search-bar button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+        }
+        
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Process Flow */
+        .process-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .process-step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .process-step::after {
+            content: '\f061';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 2rem;
+        }
+        
+        .process-step:last-child::after {
+            display: none;
+        }
+        
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .step-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Dashboard Preview */
+        .dashboard {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .stat-card-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .chart-placeholder {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: 50%;
+            padding-right: 50px;
+            text-align: right;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 50%;
+            padding-left: 50px;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            border: 5px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+        
+        .timeline-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 5px 15px rgba(26, 187, 156, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(26, 187, 156, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: white;
+            box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4);
+        }
+        
+        /* List Styles */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 15px 0;
+            padding-left: 40px;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .feature-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .problem-list li::before {
+            content: '\f00d';
+            color: var(--danger);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            h3 {
+                font-size: 1.5rem;
+            }
+            
+            .slide-content {
+                padding: 40px 30px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .process-flow {
+                flex-direction: column;
+            }
+            
+            .process-step::after {
+                display: none;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 60px;
+                margin-right: 0;
+                padding-left: 20px;
+                padding-right: 20px;
+                text-align: left;
+            }
+            
+            .timeline-marker {
+                left: 30px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-on-scroll {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+    <div class="nav-content">
+        <div class="nav-logo">
+            <i class="fas fa-university"></i> UNAS Tesorería
+        </div>
+        <ul class="nav-links">
+            <li><a href="#problema"><i class="fas fa-exclamation-triangle"></i> Problema</a></li>
+            <li><a href="#solucion"><i class="fas fa-lightbulb"></i> Solución</a></li>
+            <li><a href="#arquitectura"><i class="fas fa-project-diagram"></i> Arquitectura</a></li>
+            <li><a href="#prototipos"><i class="fas fa-desktop"></i> Prototipos</a></li>
+            <li><a href="#beneficios"><i class="fas fa-chart-line"></i> Beneficios</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Slide 1: Hero -->
+<section class="slide" id="inicio">
+    <div class="slide-content">
+        <div class="hero">
+            <h1>
+                <i class="fas fa-rocket"></i><br>
+                SISTEMA MODERNO INTEGRADO<br>
+                DE TESORERÍA Y PAGOS VIRTUALES
+            </h1>
+            <p style="font-size: 1.5rem; color: #666; max-width: 800px; margin: 0 auto;">
+                Transformación Digital de la Gestión Financiera<br>
+                Universidad Nacional Agraria de la Selva
+            </p>
+            
+            <div class="hero-stats">
+                <div class="stat-box">
+                    <div class="stat-value"><i class="fas fa-calendar-check"></i> 30</div>
+                    <div class="stat-label">Días de Implementación</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value"><i class="fas fa-sack-dollar"></i> 32K</div>
+                    <div class="stat-label">Inversión (Soles)</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value"><i class="fas fa-bolt"></i> 80%</div>
+                    <div class="stat-label">Mejora Eficiencia</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 60px;">
+                <a href="#problema" class="btn btn-primary">
+                    <i class="fas fa-arrow-down"></i> Conocer Más
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 2: Problemática -->
+<section class="slide" id="problema">
+    <div class="slide-content">
+        <h2><i class="fas fa-exclamation-circle"></i> Problemática Actual</h2>
+        
+        <div class="grid grid-2">
+            <div class="card card-problem">
+                <div class="icon-box" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                    <i class="fas fa-unlink"></i>
+                </div>
+                <h3>Sistemas Fragmentados</h3>
+                <ul class="feature-list problem-list">
+                    <li>4 sistemas independientes sin integración</li>
+                    <li>Datos duplicados en múltiples BDs</li>
+                    <li>Imposible trazabilidad unificada</li>
+                </ul>
+            </div>
+            
+            <div class="card card-problem">
+                <div class="icon-box" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>Integraciones Inútiles</h3>
+                <ul class="feature-list problem-list">
+                    <li><strong>95%</strong> datos obsoletos en uso</li>
+                    <li>DICDA/DIAA solo 1ra consulta (5%)</li>
+                    <li>DNIs falsos: <code>NNN?00000XXX</code></li>
+                </ul>
+            </div>
+            
+            <div class="card card-problem">
+                <div class="icon-box" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Arquitectura Obsoleta</h3>
+                <ul class="feature-list problem-list">
+                    <li>God Classes (150+ líneas)</li>
+                    <li>Sin tests unitarios</li>
+                    <li>Mantenimiento imposible</li>
+                </ul>
+            </div>
+            
+            <div class="card card-problem">
+                <div class="icon-box" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <h3>Procesos Lentos</h3>
+                <ul class="feature-list problem-list">
+                    <li>Conciliación: <strong>2-3 días</strong></li>
+                    <li>Arqueo: <strong>45-60 min</strong></li>
+                    <li>Atención: <strong>15-30 seg/cliente</strong></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="grid grid-3" style="margin-top: 40px;">
+            <div class="stat-box" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                <div class="stat-value">95%</div>
+                <div class="stat-label">Datos Obsoletos</div>
+            </div>
+            <div class="stat-box" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                <div class="stat-value">3 días</div>
+                <div class="stat-label">Conciliación Manual</div>
+            </div>
+            <div class="stat-box" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                <div class="stat-value">0%</div>
+                <div class="stat-label">Auditoría Automática</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 3: Flujo Problemático -->
+<section class="slide">
+    <div class="slide-content">
+        <h2><i class="fas fa-project-diagram"></i> Flujo Actual Problemático</h2>
+        
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="step-icon" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="step-title">Alumno llega</div>
+                <div class="step-description">A ventanilla de caja</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="step-title">Búsqueda lenta</div>
+                <div class="step-description">15-30 segundos</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="step-title">Datos viejos</div>
+                <div class="step-description">95% obsoletos</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="step-title">Emitir recibo</div>
+                <div class="step-description">3-5 minutos</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon" style="background: linear-gradient(135deg, var(--danger), #c82333);">
+                    <i class="fas fa-file-excel"></i>
+                </div>
+                <div class="step-title">Conciliación</div>
+                <div class="step-description">Manual en Excel</div>
+            </div>
+        </div>
+        
+        <div class="card card-problem" style="margin-top: 50px;">
+            <h3><i class="fas fa-exclamation-triangle"></i> Consecuencias</h3>
+            <div class="grid grid-2">
+                <ul class="feature-list problem-list">
+                    <li>Colas largas en ventanilla</li>
+                    <li>Errores de digitación frecuentes</li>
+                    <li>Duplicación de vouchers</li>
+                    <li>Deudas nunca actualizadas</li>
+                </ul>
+                <ul class="feature-list problem-list">
+                    <li>Sin auditoría de cambios</li>
+                    <li>Reportes manuales tardíos</li>
+                    <li>Información desincronizada</li>
+                    <li>Riesgo de fraude elevado</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 4: Solución Propuesta -->
+<section class="slide" id="solucion">
+    <div class="slide-content">
+        <h2><i class="fas fa-lightbulb"></i> Solución Propuesta</h2>
+        
+        <div class="card card-solution">
+            <h3><i class="fas fa-rocket"></i> Sistema Moderno Integrado</h3>
+            <p style="font-size: 1.2rem;">
+                Plataforma web unificada que centraliza <strong>Ventanilla + POS + Banco + Online</strong> 
+                en un solo sistema con arquitectura hexagonal moderna.
+            </p>
+        </div>
+        
+        <div class="grid grid-3" style="margin-top: 40px;">
+            <div class="card card-benefit">
+                <div class="icon-box">
+                    <i class="fas fa-link"></i>
+                </div>
+                <h4>Integración Total</h4>
+                <p>Una sola plataforma para todos los canales de pago</p>
+            </div>
+            
+            <div class="card card-benefit">
+                <div class="icon-box">
+                    <i class="fas fa-sync"></i>
+                </div>
+                <h4>Sincronización Auto</h4>
+                <p>Datos actualizados cada hora desde DICDA/DIAA</p>
+            </div>
+            
+            <div class="card card-benefit">
+                <div class="icon-box">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h4>Performance</h4>
+                <p>Búsquedas en < 100ms con cache inteligente</p>
+            </div>
+            
+            <div class="card card-benefit">
+                <div class="icon-box">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4>Seguridad</h4>
+                <p>Auditoría completa de todas las operaciones</p>
+            </div>
+            
+            <div class="card card-benefit">
+                <div class="icon-box">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h4>Dashboards</h4>
+                <p>Información gerencial en tiempo real</p>
+            </div>
+            
+            <div class="card card-benefit">
+                <div class="icon-box">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h4>Reportes Auto</h4>
+                <p>Exportación Excel/PDF instantánea</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 5: Arquitectura Hexagonal -->
+<section class="slide" id="arquitectura">
+    <div class="slide-content">
+        <h2><i class="fas fa-project-diagram"></i> Arquitectura Hexagonal</h2>
+        
+        <div class="architecture-diagram">
+            <div class="architecture-layer">
+                <div class="layer-title">
+                    <i class="fas fa-plug"></i> MÓDULO INTEGRATIONS (Sin Entidades Dominio)
+                </div>
+                <div class="grid grid-3">
+                    <div>
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i> 
+                        <strong>DICDA/DIAA/DIBU</strong> DataSources
+                    </div>
+                    <div>
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i> 
+                        <strong>Cache automático</strong> (1h TTL)
+                    </div>
+                    <div>
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i> 
+                        <strong>Fallback</strong> entre fuentes
+                    </div>
+                    <div>
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i> 
+                        <strong>Circuit breaker</strong>
+                    </div>
+                    <div>
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i> 
+                        <strong>Retry logic</strong>
+                    </div>
+                    <div>
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i> 
+                        <strong>Solo retorna DTOs</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="architecture-layer">
+                <div class="layer-title">
+                    <i class="fas fa-cube"></i> MÓDULO PAYONLINE (Core Negocio)
+                </div>
+                <div class="grid grid-3">
+                    <div>
+                        <i class="fas fa-layer-group"></i> 
+                        <strong>Domain Layer</strong><br>
+                        <small>Entities, VOs, Interfaces</small>
+                    </div>
+                    <div>
+                        <i class="fas fa-cogs"></i> 
+                        <strong>Application Layer</strong><br>
+                        <small>Use Cases, DTOs</small>
+                    </div>
+                    <div>
+                        <i class="fas fa-database"></i> 
+                        <strong>Infrastructure</strong><br>
+                        <small>Eloquent, Mappers</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="architecture-layer">
+                <div class="layer-title">
+                    <i class="fas fa-desktop"></i> CAPA DE PRESENTACIÓN
+                </div>
+                <div class="grid grid-4">
+                    <div>
+                        <i class="fab fa-vuejs" style="color: #42b883;"></i> 
+                        <strong>Vue 3</strong>
+                    </div>
+                    <div>
+                        <i class="fas fa-code"></i> 
+                        <strong>TypeScript</strong>
+                    </div>
+                    <div>
+                        <i class="fas fa-palette"></i> 
+                        <strong>Tailwind CSS</strong>
+                    </div>
+                    <div>
+                        <i class="fas fa-chart-bar"></i> 
+                        <strong>Chart.js</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid grid-2" style="margin-top: 40px;">
+            <div class="card card-benefit">
+                <h4><i class="fas fa-check-double"></i> Ventajas Arquitectura</h4>
+                <ul class="feature-list">
+                    <li>20-30 líneas por clase (vs 150+)</li>
+                    <li>Separación de responsabilidades</li>
+                    <li>100% testeable con DI</li>
+                    <li>Fácil mantenimiento</li>
+                </ul>
+            </div>
+            
+            <div class="card card-benefit">
+                <h4><i class="fas fa-shield-alt"></i> SOLID Principles</h4>
+                <ul class="feature-list">
+                    <li>Single Responsibility</li>
+                    <li>Open/Closed</li>
+                    <li>Liskov Substitution</li>
+                    <li>Dependency Inversion</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 6: Flujo Optimizado -->
+<section class="slide">
+    <div class="slide-content">
+        <h2><i class="fas fa-rocket"></i> Flujo Optimizado</h2>
+        
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="step-icon" style="background: linear-gradient(135deg, var(--success), #1e7e34);">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="step-title">Alumno llega</div>
+                <div class="step-description">A ventanilla de caja</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon" style="background: linear-gradient(135deg, var(--success), #1e7e34);">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="step-title">Búsqueda rápida</div>
+                <div class="step-description">< 1 segundo</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon" style="background: linear-gradient(135deg, var(--success), #1e7e34);">
+                    <i class="fas fa-sync"></i>
+                </div>
+                <div class="step-title">Datos frescos</div>
+                <div class="step-description">Actualizados 1h</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon" style="background: linear-gradient(135deg, var(--success), #1e7e34);">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="step-title">Recibo rápido</div>
+                <div class="step-description">30 segundos</div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-icon" style="background: linear-gradient(135deg, var(--success), #1e7e34);">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <div class="step-title">Conciliación</div>
+                <div class="step-description">Automática</div>
+            </div>
+        </div>
+        
+        <h3 style="margin-top: 50px; text-align: center;">
+            <i class="fas fa-chart-bar"></i> Comparativa Antes vs Después
+        </h3>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-tasks"></i> Proceso</th>
+                    <th><i class="fas fa-times-circle"></i> Actual</th>
+                    <th><i class="fas fa-check-circle"></i> Nuevo</th>
+                    <th><i class="fas fa-percentage"></i> Mejora</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Buscar cliente</strong></td>
+                    <td class="before">15-30 seg</td>
+                    <td class="after">< 1 seg</td>
+                    <td><strong>95% más rápido</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Emitir recibo</strong></td>
+                    <td class="before">3-5 min</td>
+                    <td class="after">30 seg</td>
+                    <td><strong>90% más rápido</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Conciliar banco</strong></td>
+                    <td class="before">2-3 días</td>
+                    <td class="after">Automático</td>
+                    <td><strong>100% automático</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Arqueo diario</strong></td>
+                    <td class="before">45-60 min</td>
+                    <td class="after">5 min</td>
+                    <td><strong>92% más rápido</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Reportes gerenciales</strong></td>
+                    <td class="before">Manual/Excel</td>
+                    <td class="after">Tiempo real</td>
+                    <td><strong>Instantáneo</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Actualizar datos</strong></td>
+                    <td class="before">Nunca</td>
+                    <td class="after">Cada hora</td>
+                    <td><strong>Datos frescos</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Slide 7: Prototipos - Búsqueda de Cliente -->
+<section class="slide" id="prototipos">
+    <div class="slide-content">
+        <h2><i class="fas fa-desktop"></i> Prototipo: Búsqueda de Cliente</h2>
+        
+        <div class="mockup">
+            <div class="mockup-header">
+                <div>
+                    <i class="fas fa-users"></i> 
+                    <strong>Sistema de Tesorería</strong> - Búsqueda de Cliente
+                </div>
+                <div>
+                    <i class="fas fa-user-circle"></i> Juan Pérez (Cajero)
+                </div>
+            </div>
+            
+            <div class="mockup-body">
+                <div class="search-bar">
+                    <input type="text" placeholder="🔍 Buscar por DNI, código o nombre..." value="12345678">
+                    <button>
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+                
+                <div style="background: #e6fff9; padding: 15px; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 20px;">
+                    <i class="fas fa-bolt" style="color: var(--primary);"></i> 
+                    <strong>Búsqueda instantánea</strong> - Resultados en < 100ms con autocompletado
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-id-card"></i> DNI</th>
+                            <th><i class="fas fa-user"></i> Nombre Completo</th>
+                            <th><i class="fas fa-graduation-cap"></i> Tipo</th>
+                            <th><i class="fas fa-database"></i> Fuente</th>
+                            <th><i class="fas fa-cog"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>12345678</td>
+                            <td>PÉREZ GARCÍA, JUAN CARLOS</td>
+                            <td><span class="badge badge-success">Alumno</span></td>
+                            <td><i class="fas fa-sync" style="color: var(--primary);"></i> DICDA (actualizado 30 min)</td>
+                            <td>
+                                <button class="btn" style="padding: 8px 20px; font-size: 0.9rem;">
+                                    <i class="fas fa-receipt"></i> Nuevo Pago
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <div class="grid grid-4">
+                        <div>
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i> 
+                            <strong>Datos actualizados</strong>
+                        </div>
+                        <div>
+                            <i class="fas fa-shield-alt" style="color: var(--primary);"></i> 
+                            <strong>Validado RENIEC</strong>
+                        </div>
+                        <div>
+                            <i class="fas fa-history" style="color: var(--info);"></i> 
+                            <strong>Historial completo</strong>
+                        </div>
+                        <div>
+                            <i class="fas fa-file-invoice-dollar" style="color: var(--warning);"></i> 
+                            <strong>Ver deudas</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 8: Prototipos - Dashboard -->
+<section class="slide">
+    <div class="slide-content">
+        <h2><i class="fas fa-chart-line"></i> Prototipo: Dashboard Gerencial</h2>
+        
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <h3 style="margin: 0;"><i class="fas fa-tachometer-alt"></i> Dashboard Financiero</h3>
+                <div>
+                    <i class="fas fa-calendar-alt"></i> Hoy: 30 Marzo 2026
+                    <button class="btn btn-secondary" style="padding: 10px 20px; margin-left: 20px; font-size: 0.9rem;">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-card-value">S/. 48,350</div>
+                    <div class="stat-card-label">Ingresos Hoy</div>
+                    <div style="color: var(--success); margin-top: 5px; font-size: 0.9rem;">
+                        <i class="fas fa-arrow-up"></i> +12% vs ayer
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="stat-card-value">127</div>
+                    <div class="stat-card-label">Recibos Emitidos</div>
+                    <div style="color: var(--success); margin-top: 5px; font-size: 0.9rem;">
+                        <i class="fas fa-arrow-up"></i> +8% vs promedio
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, var(--warning), #d39e00);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-card-value">S/. 12,450</div>
+                    <div class="stat-card-label">Deudas Pendientes</div>
+                    <div style="color: var(--danger); margin-top: 5px; font-size: 0.9rem;">
+                        <i class="fas fa-arrow-down"></i> -5% vs mes anterior
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, var(--info), #0aa2c0);">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <div class="stat-card-value">98.5%</div>
+                    <div class="stat-card-label">Tasa Conciliación</div>
+                    <div style="color: var(--success); margin-top: 5px; font-size: 0.9rem;">
+                        <i class="fas fa-check"></i> Automático
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-2">
+                <div class="chart-placeholder">
+                    <div>
+                        <i class="fas fa-chart-bar" style="font-size: 4rem; color: var(--primary); margin-bottom: 20px;"></i>
+                        <h4>Ingresos por Canal</h4>
+                        <div class="grid grid-2" style="margin-top: 20px; text-align: left;">
+                            <div>
+                                <i class="fas fa-cash-register" style="color: var(--primary);"></i> 
+                                <strong>Ventanilla:</strong> 45%
+                            </div>
+                            <div>
+                                <i class="fas fa-credit-card" style="color: var(--secondary);"></i> 
+                                <strong>Online:</strong> 30%
+                            </div>
+                            <div>
+                                <i class="fas fa-mobile-alt" style="color: var(--info);"></i> 
+                                <strong>POS:</strong> 15%
+                            </div>
+                            <div>
+                                <i class="fas fa-university" style="color: var(--warning);"></i> 
+                                <strong>Banco:</strong> 10%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-placeholder">
+                    <div>
+                        <i class="fas fa-chart-line" style="font-size: 4rem; color: var(--secondary); margin-bottom: 20px;"></i>
+                        <h4>Tendencia Últimos 7 Días</h4>
+                        <div style="margin-top: 20px; text-align: left;">
+                            <div style="margin: 10px 0;">
+                                <i class="fas fa-arrow-up" style="color: var(--success);"></i> 
+                                Promedio diario: <strong>S/. 42,300</strong>
+                            </div>
+                            <div style="margin: 10px 0;">
+                                <i class="fas fa-trophy" style="color: var(--warning);"></i> 
+                                Día pico: <strong>S/. 56,800</strong> (Lunes)
+                            </div>
+                            <div style="margin: 10px 0;">
+                                <i class="fas fa-info-circle" style="color: var(--info);"></i> 
+                                Proyección semana: <strong>S/. 296,100</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 9: Prototipos - Emisión Recibo -->
+<section class="slide">
+    <div class="slide-content">
+        <h2><i class="fas fa-file-invoice-dollar"></i> Prototipo: Emisión de Recibo</h2>
+        
+        <div class="mockup">
+            <div class="mockup-header">
+                <div>
+                    <i class="fas fa-receipt"></i> 
+                    <strong>Nuevo Recibo</strong> - Cliente: PÉREZ GARCÍA, JUAN CARLOS
+                </div>
+                <div>
+                    <i class="fas fa-id-card"></i> DNI: 12345678
+                </div>
+            </div>
+            
+            <div class="mockup-body">
+                <div class="grid grid-2" style="margin-bottom: 30px;">
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 10px;">
+                            <i class="fas fa-list"></i> Conceptos Disponibles
+                        </label>
+                        <div class="search-bar">
+                            <input type="text" placeholder="🔍 Buscar concepto...">
+                        </div>
+                        <div style="margin-top: 15px; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px; padding: 10px;">
+                            <div style="padding: 10px; margin: 5px 0; background: white; border: 1px solid #dee2e6; border-radius: 5px; cursor: pointer;">
+                                <strong>DERECHO DE MATRÍCULA 2024-I</strong><br>
+                                <small>S/. 60.00 - Centro: Académico</small>
+                            </div>
+                            <div style="padding: 10px; margin: 5px 0; background: white; border: 1px solid #dee2e6; border-radius: 5px; cursor: pointer;">
+                                <strong>CERTIFICADO DE ESTUDIOS</strong><br>
+                                <small>S/. 15.00 - Centro: Académico</small>
+                            </div>
+                            <div style="padding: 10px; margin: 5px 0; background: white; border: 1px solid #dee2e6; border-radius: 5px; cursor: pointer;">
+                                <strong>ARTE Y CULTURA</strong><br>
+                                <small>S/. 5.00 - Centro: Cultura</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 10px;">
+                            <i class="fas fa-shopping-cart"></i> Conceptos Seleccionados
+                        </label>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>Cant</th>
+                                    <th>Precio</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>MATRÍCULA 2024-I</strong></td>
+                                    <td>1</td>
+                                    <td>S/. 60.00</td>
+                                    <td><strong>S/. 60.00</strong></td>
+                                    <td>
+                                        <i class="fas fa-times" style="color: var(--danger); cursor: pointer;"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ARTE Y CULTURA</strong></td>
+                                    <td>1</td>
+                                    <td>S/. 5.00</td>
+                                    <td><strong>S/. 5.00</strong></td>
+                                    <td>
+                                        <i class="fas fa-times" style="color: var(--danger); cursor: pointer;"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div style="margin-top: 20px; background: var(--light); padding: 20px; border-radius: 8px; text-align: right;">
+                            <div style="font-size: 1.5rem; color: var(--dark);">
+                                <strong>TOTAL: S/. 65.00</strong>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; text-align: right;">
+                            <button class="btn btn-secondary" style="padding: 12px 30px; margin-right: 10px;">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                            <button class="btn btn-primary" style="padding: 12px 30px;">
+                                <i class="fas fa-check"></i> Emitir Recibo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #e6f7ff; padding: 15px; border-radius: 8px; border-left: 4px solid var(--info);">
+                    <i class="fas fa-info-circle" style="color: var(--info);"></i> 
+                    <strong>Proceso optimizado:</strong> Selección rápida con búsqueda inteligente y validación automática de conceptos
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 10: Beneficios Cuantificables -->
+<section class="slide" id="beneficios">
+    <div class="slide-content">
+        <h2><i class="fas fa-chart-bar"></i> Beneficios Cuantificables</h2>
+        
+        <div class="grid grid-3">
+            <div class="card card-benefit">
+                <div class="icon-box">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Ahorro en Tiempo</h3>
+                <ul class="feature-list">
+                    <li><strong>480 hrs/año</strong> en conciliación</li>
+                    <li><strong>240 hrs/año</strong> en reportes</li>
+                    <li><strong>120 hrs/año</strong> en búsquedas</li>
+                    <li><strong>Total: 840 hrs = 105 días</strong></li>
+                </ul>
+            </div>
+            
+            <div class="card card-benefit">
+                <div class="icon-box">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <h3>Reducción Errores</h3>
+                <ul class="feature-list">
+                    <li><strong>90%</strong> menos errores digitación</li>
+                    <li><strong>100%</strong> sin duplicados voucher</li>
+                    <li><strong>80%</strong> menos reclamos</li>
+                    <li><strong>95%</strong> datos actualizados</li>
+                </ul>
+            </div>
+            
+            <div class="card card-benefit">
+                <div class="icon-box">
+                    <i class="fas fa-smile-beam"></i>
+                </div>
+                <h3>Mejora Servicio</h3>
+                <ul class="feature-list">
+                    <li>Atención <strong>5x más rápida</strong></li>
+                    <li>Disponibilidad <strong>24/7</strong> online</li>
+                    <li><strong>100%</strong> transparencia</li>
+                    <li>Satisfacción <strong>+40%</strong></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="grid grid-4" style="margin-top: 40px;">
+            <div class="stat-box">
+                <div class="stat-value">< 6 meses</div>
+                <div class="stat-label">Retorno Inversión (ROI)</div>
+            </div>
+            <div class="stat-box" style="background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));">
+                <div class="stat-value">80%</div>
+                <div class="stat-label">Reducción Tiempos</div>
+            </div>
+            <div class="stat-box" style="background: linear-gradient(135deg, var(--success), #1e7e34);">
+                <div class="stat-value">90%</div>
+                <div class="stat-label">Menos Errores</div>
+            </div>
+            <div class="stat-box" style="background: linear-gradient(135deg, var(--info), #0aa2c0);">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Conciliación Auto</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 11: Timeline Implementación -->
+<section class="slide">
+    <div class="slide-content">
+        <h2><i class="fas fa-tasks"></i> Plan de Implementación - 30 Días</h2>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h4><i class="fas fa-clipboard-list"></i> Fase 1: Levantamiento (Días 1-7)</h4>
+                    <ul class="feature-list">
+                        <li>Reuniones con stakeholders</li>
+                        <li>Análisis de procesos actuales</li>
+                        <li>Validación de requerimientos</li>
+                        <li>Diseño detallado del sistema</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h4><i class="fas fa-code"></i> Fase 2: Desarrollo + Testing (Días 8-20)</h4>
+                    <ul class="feature-list">
+                        <li>Implementación módulo Integrations</li>
+                        <li>Desarrollo módulo PayOnline</li>
+                        <li>Integración pasarelas de pago</li>
+                        <li>Pruebas unitarias e integración</li>
+                        <li>Pruebas de usuario (UAT)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h4><i class="fas fa-chalkboard-teacher"></i> Fase 3: Capacitación (Días 21-25)</h4>
+                    <ul class="feature-list">
+                        <li>Capacitación usuarios finales (cajeros)</li>
+                        <li>Capacitación personal OTIC (técnicos)</li>
+                        <li>Entrega de manuales usuario</li>
+                        <li>Documentación técnica completa</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h4><i class="fas fa-rocket"></i> Fase 4: Puesta en Producción (Días 26-30)</h4>
+                    <ul class="feature-list">
+                        <li>Despliegue en servidor OTIC</li>
+                        <li>Migración de datos históricos</li>
+                        <li>Pruebas finales en producción</li>
+                        <li>Go-Live y monitoreo</li>
+                        <li>Soporte post-implementación</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 12: Conclusión -->
+<section class="slide">
+    <div class="slide-content">
+        <div class="hero">
+            <h2 style="font-size: 3rem; margin-bottom: 40px;">
+                <i class="fas fa-check-circle" style="color: var(--success);"></i><br>
+                ¿Por Qué Este Sistema?
+            </h2>
+            
+            <div class="grid grid-2">
+                <div class="card card-benefit">
+                    <div class="icon-box">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h4>Resuelve Problemas Críticos</h4>
+                    <ul class="feature-list">
+                        <li>Elimina sistemas fragmentados</li>
+                        <li>Datos siempre actualizados</li>
+                        <li>Conciliación automática</li>
+                        <li>Auditoría completa</li>
+                    </ul>
+                </div>
+                
+                <div class="card card-benefit">
+                    <div class="icon-box">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h4>Arquitectura Moderna</h4>
+                    <ul class="feature-list">
+                        <li>Clean Architecture</li>
+                        <li>Fácil mantenimiento</li>
+                        <li>100% testeable</li>
+                        <li>SOLID principles</li>
+                    </ul>
+                </div>
+                
+                <div class="card card-benefit">
+                    <div class="icon-box">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4>Eficiencia Operativa</h4>
+                    <ul class="feature-list">
+                        <li>80% reducción tiempos</li>
+                        <li>90% menos errores</li>
+                        <li>Información tiempo real</li>
+                        <li>Dashboards gerenciales</li>
+                    </ul>
+                </div>
+                
+                <div class="card card-benefit">
+                    <div class="icon-box">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Cumplimiento Normativo</h4>
+                    <ul class="feature-list">
+                        <li>Auditoría automática</li>
+                        <li>Trazabilidad total</li>
+                        <li>Seguridad robusta</li>
+                        <li>Reportes para control</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="margin-top: 60px;">
+                <div class="stat-box" style="display: inline-block; margin: 0 20px; font-size: 1.5rem;">
+                    <i class="fas fa-money-bill-wave"></i> Inversión: <strong>S/. 32,000</strong>
+                </div>
+                <div class="stat-box" style="display: inline-block; margin: 0 20px; font-size: 1.5rem; background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));">
+                    <i class="fas fa-chart-line"></i> ROI: <strong>< 6 meses</strong>
+                </div>
+            </div>
+            
+            <div style="margin-top: 60px;">
+                <h2 style="color: var(--primary); font-size: 4rem;">
+                    <i class="fas fa-rocket"></i> ¡Modernizemos la UNAS!
+                </h2>
+                <p style="font-size: 1.5rem; margin-top: 20px;">
+                    Unidad de Tesorería + Oficina de Tecnologías (OTIC)
+                </p>
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <button class="btn btn-primary" style="font-size: 1.3rem; padding: 20px 50px;">
+                    <i class="fas fa-rocket"></i> Iniciar Transformación Digital
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer flotante -->
+<div style="position: fixed; bottom: 20px; right: 20px; z-index: 999;">
+    <a href="#inicio" class="btn btn-primary" style="border-radius: 50%; width: 60px; height: 60px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+<script>
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Animate on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate-on-scroll');
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.card, .stat-box, .mockup, .architecture-layer').forEach(el => {
+    observer.observe(el);
+});
+</script>
+
+</body>
+</html>
