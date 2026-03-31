@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Moderno de Tesorería UNAS - Prototipo Funcional</title>
+    <title>Sistema de Tesorería UNAS - Prototipo Completo</title>
     
     <!-- Vue 3 -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -11,801 +11,16 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <style>
-        :root {
-            --primary: rgb(26, 187, 156);
-            --primary-light: rgb(72, 230, 198);
-            --primary-dark: rgb(20, 150, 125);
-            --secondary: #0d6efd;
-            --secondary-light: #4d94ff;
-            --secondary-dark: #0a58ca;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --success: #28a745;
-            --info: #0dcaf0;
-            --dark: #212529;
-            --light: #f8f9fa;
-            --sidebar-width: 280px;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
-            color: #333;
-        }
-        
-        /* Layout Principal */
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary) 100%);
-            color: white;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
-        
-        .sidebar.collapsed {
-            transform: translateX(-100%);
-        }
-        
-        .sidebar-header {
-            padding: 25px 20px;
-            background: rgba(0,0,0,0.2);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-        
-        .sidebar-logo i {
-            font-size: 2rem;
-        }
-        
-        .sidebar-user {
-            margin-top: 15px;
-            padding: 12px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-        
-        .sidebar-nav {
-            padding: 20px 0;
-        }
-        
-        .nav-section {
-            margin-bottom: 30px;
-        }
-        
-        .nav-section-title {
-            padding: 10px 20px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            opacity: 0.7;
-            letter-spacing: 1px;
-        }
-        
-        .nav-item {
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-left: 4px solid transparent;
-        }
-        
-        .nav-item:hover {
-            background: rgba(255,255,255,0.1);
-            border-left-color: var(--primary-light);
-        }
-        
-        .nav-item.active {
-            background: rgba(255,255,255,0.15);
-            border-left-color: white;
-        }
-        
-        .nav-item i {
-            width: 24px;
-            font-size: 1.2rem;
-        }
-        
-        .nav-badge {
-            margin-left: auto;
-            background: var(--warning);
-            color: var(--dark);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-        
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            transition: margin-left 0.3s ease;
-        }
-        
-        .main-content.expanded {
-            margin-left: 0;
-        }
-        
-        /* Topbar */
-        .topbar {
-            background: white;
-            padding: 15px 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 999;
-        }
-        
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .menu-toggle {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--primary);
-            padding: 8px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        
-        .menu-toggle:hover {
-            background: var(--light);
-        }
-        
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #666;
-            font-size: 0.95rem;
-        }
-        
-        .breadcrumb i {
-            font-size: 0.8rem;
-        }
-        
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .topbar-search {
-            position: relative;
-        }
-        
-        .topbar-search input {
-            padding: 8px 15px 8px 40px;
-            border: 2px solid #e0e0e0;
-            border-radius: 20px;
-            width: 300px;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-        
-        .topbar-search input:focus {
-            outline: none;
-            border-color: var(--primary);
-            width: 350px;
-        }
-        
-        .topbar-search i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-        }
-        
-        .topbar-icon {
-            position: relative;
-            cursor: pointer;
-            font-size: 1.3rem;
-            color: #666;
-            padding: 8px;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-        
-        .topbar-icon:hover {
-            background: var(--light);
-            color: var(--primary);
-        }
-        
-        .topbar-icon .badge {
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            background: var(--danger);
-            color: white;
-            font-size: 0.65rem;
-            padding: 2px 5px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-        
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-        
-        .user-menu:hover {
-            background: var(--light);
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-        
-        /* Content Area */
-        .content-area {
-            padding: 30px;
-        }
-        
-        .page-header {
-            margin-bottom: 30px;
-        }
-        
-        .page-title {
-            font-size: 2rem;
-            color: var(--dark);
-            margin-bottom: 10px;
-        }
-        
-        .page-subtitle {
-            color: #666;
-            font-size: 1rem;
-        }
-        
-        /* Cards */
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light);
-        }
-        
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .card-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
-        }
-        
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: white;
-        }
-        
-        .stat-icon.primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-        }
-        
-        .stat-icon.secondary {
-            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
-        }
-        
-        .stat-icon.success {
-            background: linear-gradient(135deg, var(--success), #4caf50);
-        }
-        
-        .stat-icon.warning {
-            background: linear-gradient(135deg, var(--warning), #ffa000);
-        }
-        
-        .stat-content {
-            flex: 1;
-        }
-        
-        .stat-label {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--dark);
-        }
-        
-        .stat-change {
-            font-size: 0.8rem;
-            margin-top: 5px;
-        }
-        
-        .stat-change.up {
-            color: var(--success);
-        }
-        
-        .stat-change.down {
-            color: var(--danger);
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(26, 187, 156, 0.3);
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-        
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-sm {
-            padding: 6px 15px;
-            font-size: 0.85rem;
-        }
-        
-        .btn-icon {
-            padding: 8px 12px;
-        }
-        
-        /* Form Controls */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(26, 187, 156, 0.1);
-        }
-        
-        .form-control-search {
-            padding-left: 40px;
-        }
-        
-        .input-group {
-            position: relative;
-        }
-        
-        .input-group i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-        }
-        
-        /* Tables */
-        .table-responsive {
-            overflow-x: auto;
-        }
-        
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .table thead {
-            background: var(--light);
-        }
-        
-        .table th {
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--dark);
-            border-bottom: 2px solid #dee2e6;
-        }
-        
-        .table td {
-            padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .table tbody tr {
-            transition: background 0.2s;
-        }
-        
-        .table tbody tr:hover {
-            background: #f8f9fa;
-        }
-        
-        /* Badges */
-        .badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        .badge-success {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .badge-warning {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .badge-danger {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .badge-info {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-        
-        .badge-primary {
-            background: rgba(26, 187, 156, 0.15);
-            color: var(--primary-dark);
-        }
-        
-        /* Action Buttons */
-        .action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 5px;
-            color: #666;
-            transition: all 0.2s;
-            font-size: 1rem;
-        }
-        
-        .action-btn:hover {
-            background: var(--light);
-            color: var(--primary);
-        }
-        
-        .action-btn.danger:hover {
-            color: var(--danger);
-        }
-        
-        /* Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            padding: 20px;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-        
-        .modal-header {
-            padding: 25px 30px;
-            border-bottom: 2px solid var(--light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #999;
-            transition: color 0.2s;
-        }
-        
-        .modal-close:hover {
-            color: var(--danger);
-        }
-        
-        .modal-body {
-            padding: 30px;
-        }
-        
-        .modal-footer {
-            padding: 20px 30px;
-            border-top: 2px solid var(--light);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        
-        /* Alerts */
-        .alert {
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .alert i {
-            font-size: 1.3rem;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-        
-        .alert-warning {
-            background: #fff3cd;
-            color: #856404;
-            border-left: 4px solid #ffc107;
-        }
-        
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border-left: 4px solid #0dcaf0;
-        }
-        
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 5px;
-            border-bottom: 2px solid var(--light);
-            margin-bottom: 25px;
-        }
-        
-        .tab {
-            padding: 12px 25px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
-            font-weight: 600;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-        }
-        
-        .tab:hover {
-            color: var(--primary);
-        }
-        
-        .tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-        
-        /* Loading */
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            color: var(--primary);
-        }
-        
-        .spinner {
-            border: 3px solid var(--light);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .sidebar.mobile-visible {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
-            
-            .topbar-search input {
-                width: 200px;
-            }
-            
-            .topbar-search input:focus {
-                width: 250px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Transitions */
-        .fade-enter-active, .fade-leave-active {
-            transition: opacity 0.3s;
-        }
-        
-        .fade-enter-from, .fade-leave-to {
-            opacity: 0;
-        }
-        
-        .slide-enter-active, .slide-leave-active {
-            transition: all 0.3s;
-        }
-        
-        .slide-enter-from {
-            transform: translateX(30px);
-            opacity: 0;
-        }
-        
-        .slide-leave-to {
-            transform: translateX(-30px);
-            opacity: 0;
-        }
-    </style>
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div id="app">
     <div class="app-container">
-        <!-- Sidebar -->
+        <!-- ========================================
+             SIDEBAR
+        ========================================= -->
         <aside class="sidebar" :class="{ 'collapsed': !sidebarVisible, 'mobile-visible': sidebarVisible && isMobile }">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
@@ -820,163 +35,107 @@
             </div>
             
             <nav class="sidebar-nav">
-                <!-- Dashboard -->
+                <!-- DASHBOARD -->
                 <div class="nav-section">
                     <div class="nav-section-title">Principal</div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'dashboard' }"
-                        @click="changeView('dashboard')"
-                    >
+                    <div class="nav-item" :class="{ active: currentView === 'dashboard' }" @click="changeView('dashboard')">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </div>
                 </div>
                 
-                <!-- Tesorería -->
+                <!-- CLIENTES -->
                 <div class="nav-section">
-                    <div class="nav-section-title">Tesorería</div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'buscar-cliente' }"
-                        @click="changeView('buscar-cliente')"
-                    >
+                    <div class="nav-section-title">Clientes</div>
+                    <div class="nav-item" :class="{ active: currentView === 'listado-clientes' }" @click="changeView('listado-clientes')">
+                        <i class="fas fa-users"></i>
+                        <span>Listado Clientes</span>
+                    </div>
+                    <div class="nav-item" :class="{ active: currentView === 'buscar-cliente' }" @click="changeView('buscar-cliente')">
                         <i class="fas fa-search"></i>
                         <span>Buscar Cliente</span>
                     </div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'nuevo-recibo' }"
-                        @click="changeView('nuevo-recibo')"
-                    >
+                </div>
+                
+                <!-- CATÁLOGO -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Catálogo</div>
+                    <div class="nav-item" :class="{ active: currentView === 'conceptos' }" @click="changeView('conceptos')">
+                        <i class="fas fa-tags"></i>
+                        <span>Conceptos</span>
+                    </div>
+                </div>
+                
+                <!-- ESTRUCTURA FINANCIERA -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Estructura Financiera</div>
+                    <div class="nav-item" :class="{ active: currentView === 'dependencias' }" @click="changeView('dependencias')">
+                        <i class="fas fa-sitemap"></i>
+                        <span>Dependencias</span>
+                    </div>
+                    <div class="nav-item" :class="{ active: currentView === 'subcuentas' }" @click="changeView('subcuentas')">
+                        <i class="fas fa-folder-tree"></i>
+                        <span>Subcuentas</span>
+                    </div>
+                </div>
+                
+                <!-- TRANSACCIONES -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Transacciones</div>
+                    <div class="nav-item" :class="{ active: currentView === 'transacciones' }" @click="changeView('transacciones')">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Todas las Transacciones</span>
+                    </div>
+                </div>
+                
+                <!-- CAJA -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Caja</div>
+                    <div class="nav-item" :class="{ active: currentView === 'nuevo-recibo' }" @click="changeView('nuevo-recibo')">
                         <i class="fas fa-receipt"></i>
-                        <span>Nuevo Recibo</span>
+                        <span>Punto de Venta</span>
                     </div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'recibos' }"
-                        @click="changeView('recibos')"
-                    >
-                        <i class="fas fa-file-invoice"></i>
-                        <span>Recibos</span>
-                        <span class="nav-badge">{{ receipts.filter(r => r.estado === 'Válido').length }}</span>
+                    <div class="nav-item" :class="{ active: currentView === 'pos-devices' }" @click="changeView('pos-devices')">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Dispositivos POS</span>
                     </div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'arqueo' }"
-                        @click="changeView('arqueo')"
-                    >
-                        <i class="fas fa-cash-register"></i>
+                    <div class="nav-item" :class="{ active: currentView === 'arqueo' }" @click="changeView('arqueo')">
+                        <i class="fas fa-calculator"></i>
                         <span>Arqueo de Caja</span>
                     </div>
                 </div>
                 
-                <!-- Deudas -->
+                <!-- CONTABILIDAD -->
                 <div class="nav-section">
-                    <div class="nav-section-title">Deudas</div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'deudas' }"
-                        @click="changeView('deudas')"
-                    >
+                    <div class="nav-section-title">Contabilidad</div>
+                    <div class="nav-item" :class="{ active: currentView === 'recibos' }" @click="changeView('recibos')">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Recibos</span>
+                        <span class="nav-badge">{{ badgeCounts.recibos }}</span>
+                    </div>
+                    <div class="nav-item" :class="{ active: currentView === 'deudas' }" @click="changeView('deudas')">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <span>Gestionar Deudas</span>
-                        <span class="nav-badge">{{ debts.filter(d => d.estado === 'Pendiente').length }}</span>
-                    </div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'nueva-deuda' }"
-                        @click="changeView('nueva-deuda')"
-                    >
-                        <i class="fas fa-plus-circle"></i>
-                        <span>Nueva Deuda</span>
+                        <span>Deudas</span>
+                        <span class="nav-badge">{{ badgeCounts.deudas }}</span>
                     </div>
                 </div>
                 
-                <!-- Pagos Virtuales -->
-                <div class="nav-section">
-                    <div class="nav-section-title">Pagos Virtuales</div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'pagos-online' }"
-                        @click="changeView('pagos-online')"
-                    >
-                        <i class="fas fa-credit-card"></i>
-                        <span>Pagos Online</span>
-                    </div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'pos' }"
-                        @click="changeView('pos')"
-                    >
-                        <i class="fas fa-mobile-alt"></i>
-                        <span>Pagos POS</span>
-                    </div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'banco' }"
-                        @click="changeView('banco')"
-                    >
-                        <i class="fas fa-university"></i>
-                        <span>Banco Nación</span>
-                    </div>
-                </div>
-                
-                <!-- Reportes -->
+                <!-- REPORTES -->
                 <div class="nav-section">
                     <div class="nav-section-title">Reportes</div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'reportes' }"
-                        @click="changeView('reportes')"
-                    >
+                    <div class="nav-item" :class="{ active: currentView === 'reportes' }" @click="changeView('reportes')">
                         <i class="fas fa-chart-bar"></i>
-                        <span>Reportes</span>
-                    </div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'conciliacion' }"
-                        @click="changeView('conciliacion')"
-                    >
-                        <i class="fas fa-balance-scale"></i>
-                        <span>Conciliación</span>
-                    </div>
-                </div>
-                
-                <!-- Configuración -->
-                <div class="nav-section">
-                    <div class="nav-section-title">Configuración</div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'conceptos' }"
-                        @click="changeView('conceptos')"
-                    >
-                        <i class="fas fa-tags"></i>
-                        <span>Conceptos de Pago</span>
-                    </div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'usuarios' }"
-                        @click="changeView('usuarios')"
-                    >
-                        <i class="fas fa-users-cog"></i>
-                        <span>Usuarios</span>
-                    </div>
-                    <div 
-                        class="nav-item" 
-                        :class="{ active: currentView === 'configuracion' }"
-                        @click="changeView('configuracion')"
-                    >
-                        <i class="fas fa-cog"></i>
-                        <span>Configuración</span>
+                        <span>Reportes de Ingresos</span>
                     </div>
                 </div>
             </nav>
         </aside>
         
-        <!-- Main Content -->
+        <!-- ========================================
+             MAIN CONTENT
+        ========================================= -->
         <main class="main-content" :class="{ 'expanded': !sidebarVisible }">
-            <!-- Topbar -->
+            <!-- TOPBAR -->
             <div class="topbar">
                 <div class="topbar-left">
                     <button class="menu-toggle" @click="toggleSidebar">
@@ -1010,10 +169,10 @@
                 </div>
             </div>
             
-            <!-- Content Area -->
+            <!-- CONTENT AREA - Renderizado dinámico desde views.js -->
             <div class="content-area">
                 <transition name="fade" mode="out-in">
-                    <!-- Dashboard View -->
+                    <!-- DASHBOARD (hardcoded porque es especial) -->
                     <div v-if="currentView === 'dashboard'" key="dashboard">
                         <div class="page-header">
                             <h1 class="page-title">
@@ -1023,7 +182,6 @@
                             <p class="page-subtitle">Resumen general del sistema de tesorería</p>
                         </div>
                         
-                        <!-- Stats Cards -->
                         <div class="stats-grid">
                             <div class="stat-card">
                                 <div class="stat-icon primary">
@@ -1031,7 +189,7 @@
                                 </div>
                                 <div class="stat-content">
                                     <div class="stat-label">Ingresos Hoy</div>
-                                    <div class="stat-value">S/. {{ stats.ingresosHoy.toLocaleString() }}</div>
+                                    <div class="stat-value">{{ formatMoney(stats.ingresosHoy) }}</div>
                                     <div class="stat-change up">
                                         <i class="fas fa-arrow-up"></i> +12% vs ayer
                                     </div>
@@ -1057,7 +215,7 @@
                                 </div>
                                 <div class="stat-content">
                                     <div class="stat-label">Deudas Pendientes</div>
-                                    <div class="stat-value">S/. {{ stats.deudasPendientes.toLocaleString() }}</div>
+                                    <div class="stat-value">{{ formatMoney(stats.deudasPendientes) }}</div>
                                     <div class="stat-change down">
                                         <i class="fas fa-arrow-down"></i> -5% vs mes anterior
                                     </div>
@@ -1078,14 +236,13 @@
                             </div>
                         </div>
                         
-                        <!-- Recent Activity -->
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">
                                     <i class="fas fa-history"></i>
                                     Actividad Reciente
                                 </h3>
-                                <button class="btn btn-outline btn-sm">
+                                <button class="btn btn-outline btn-sm" @click="changeView('recibos')">
                                     Ver Todo
                                 </button>
                             </div>
@@ -1098,18 +255,27 @@
                                             <th>Monto</th>
                                             <th>Fecha</th>
                                             <th>Estado</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="receipt in recentReceipts" :key="receipt.id">
                                             <td><strong>{{ receipt.codigo }}</strong></td>
                                             <td>{{ receipt.cliente }}</td>
-                                            <td><strong>S/. {{ receipt.monto.toFixed(2) }}</strong></td>
+                                            <td><strong>{{ formatMoney(receipt.monto) }}</strong></td>
                                             <td>{{ receipt.fecha }}</td>
                                             <td>
                                                 <span class="badge" :class="'badge-' + receipt.estadoClass">
                                                     {{ receipt.estado }}
                                                 </span>
+                                            </td>
+                                            <td>
+                                                <button class="action-btn" @click="viewReceipt(receipt)" title="Ver">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="action-btn" @click="printReceipt(receipt)" title="Imprimir">
+                                                    <i class="fas fa-print"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1118,98 +284,7 @@
                         </div>
                     </div>
                     
-                    <!-- Buscar Cliente View -->
-                    <div v-else-if="currentView === 'buscar-cliente'" key="buscar-cliente">
-                        <div class="page-header">
-                            <h1 class="page-title">
-                                <i class="fas fa-search" style="color: var(--primary);"></i>
-                                Buscar Cliente
-                            </h1>
-                            <p class="page-subtitle">Busca clientes por DNI, código o nombre</p>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-search"></i> Buscar
-                                </label>
-                                <div class="input-group">
-                                    <i class="fas fa-search"></i>
-                                    <input 
-                                        type="text" 
-                                        class="form-control form-control-search" 
-                                        placeholder="Ingresa DNI, código o nombre del cliente..."
-                                        v-model="clientSearch"
-                                        @input="searchClients"
-                                    >
-                                </div>
-                            </div>
-                            
-                            <div v-if="searchLoading" class="loading">
-                                <div class="spinner"></div>
-                                <span style="margin-left: 15px;">Buscando...</span>
-                            </div>
-                            
-                            <div v-else-if="filteredClients.length > 0">
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i>
-                                    <div>
-                                        <strong>{{ filteredClients.length }} cliente(s) encontrado(s)</strong>
-                                        <p style="margin: 5px 0 0 0; font-size: 0.9rem;">Búsqueda instantánea en < 100ms</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>DNI</th>
-                                                <th>Nombre Completo</th>
-                                                <th>Tipo</th>
-                                                <th>Fuente</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="client in filteredClients" :key="client.id">
-                                                <td><strong>{{ client.dni }}</strong></td>
-                                                <td>{{ client.nombreCompleto }}</td>
-                                                <td>
-                                                    <span class="badge badge-primary">
-                                                        <i :class="client.tipoIcon"></i> {{ client.tipo }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <i class="fas fa-sync" style="color: var(--primary);"></i>
-                                                    {{ client.fuente }} (actualizado {{ client.actualizado }})
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-sm" @click="selectClientForPayment(client)">
-                                                        <i class="fas fa-receipt"></i> Nuevo Pago
-                                                    </button>
-                                                    <button class="btn btn-outline btn-sm" @click="viewClientHistory(client)">
-                                                        <i class="fas fa-history"></i> Historial
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <div v-else-if="clientSearch">
-                                <div class="alert alert-warning">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    <div>
-                                        <strong>No se encontraron clientes</strong>
-                                        <p style="margin: 5px 0 0 0; font-size: 0.9rem;">Intenta con otro criterio de búsqueda</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Nuevo Recibo View -->
+                    <!-- NUEVO RECIBO (también hardcoded por su complejidad) -->
                     <div v-else-if="currentView === 'nuevo-recibo'" key="nuevo-recibo">
                         <div class="page-header">
                             <h1 class="page-title">
@@ -1262,7 +337,7 @@
                                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                                     <div>
                                                         <strong>{{ concept.nombre }}</strong><br>
-                                                        <small style="color: #666;">S/. {{ concept.precio.toFixed(2) }} - {{ concept.centro }}</small>
+                                                        <small style="color: #666;">{{ formatMoney(concept.precio) }} - {{ concept.centro }}</small>
                                                     </div>
                                                     <i 
                                                         class="fas" 
@@ -1308,8 +383,8 @@
                                                                     style="width: 60px; padding: 5px; border: 2px solid #e0e0e0; border-radius: 5px;"
                                                                 >
                                                             </td>
-                                                            <td>S/. {{ concept.precio.toFixed(2) }}</td>
-                                                            <td><strong>S/. {{ (concept.precio * concept.cantidad).toFixed(2) }}</strong></td>
+                                                            <td>{{ formatMoney(concept.precio) }}</td>
+                                                            <td><strong>{{ formatMoney(concept.precio * concept.cantidad) }}</strong></td>
                                                             <td>
                                                                 <button class="action-btn danger" @click="removeConcept(concept.id)">
                                                                     <i class="fas fa-times"></i>
@@ -1324,7 +399,7 @@
                                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                                     <span style="font-size: 1.2rem; font-weight: 600;">TOTAL A PAGAR:</span>
                                                     <span style="font-size: 2rem; font-weight: bold; color: var(--primary);">
-                                                        S/. {{ receiptTotal.toFixed(2) }}
+                                                        {{ formatMoney(receiptTotal) }}
                                                     </span>
                                                 </div>
                                             </div>
@@ -1356,7 +431,7 @@
                         </div>
                     </div>
                     
-                    <!-- Recibos View -->
+                    <!-- RECIBOS -->
                     <div v-else-if="currentView === 'recibos'" key="recibos">
                         <div class="page-header">
                             <h1 class="page-title">
@@ -1376,7 +451,7 @@
                                     <button class="btn btn-outline btn-sm">
                                         <i class="fas fa-filter"></i> Filtrar
                                     </button>
-                                    <button class="btn btn-secondary btn-sm">
+                                    <button class="btn btn-secondary btn-sm" @click="exportData('excel')">
                                         <i class="fas fa-download"></i> Exportar
                                     </button>
                                 </div>
@@ -1388,6 +463,7 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Cliente</th>
+                                            <th>Conceptos</th>
                                             <th>Monto</th>
                                             <th>Fecha</th>
                                             <th>Estado</th>
@@ -1398,7 +474,8 @@
                                         <tr v-for="receipt in receipts" :key="receipt.id">
                                             <td><strong>{{ receipt.codigo }}</strong></td>
                                             <td>{{ receipt.cliente }}</td>
-                                            <td><strong>S/. {{ receipt.monto.toFixed(2) }}</strong></td>
+                                            <td><small>{{ receipt.conceptos }}</small></td>
+                                            <td><strong>{{ formatMoney(receipt.monto) }}</strong></td>
                                             <td>{{ receipt.fecha }}</td>
                                             <td>
                                                 <span class="badge" :class="'badge-' + receipt.estadoClass">
@@ -1406,13 +483,13 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <button class="action-btn" title="Ver">
+                                                <button class="action-btn" @click="viewReceipt(receipt)" title="Ver">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <button class="action-btn" title="Imprimir">
+                                                <button class="action-btn" @click="printReceipt(receipt)" title="Imprimir">
                                                     <i class="fas fa-print"></i>
                                                 </button>
-                                                <button class="action-btn danger" title="Anular">
+                                                <button class="action-btn danger" @click="nullReceipt(receipt)" title="Anular" v-if="receipt.estado === 'Válido'">
                                                     <i class="fas fa-ban"></i>
                                                 </button>
                                             </td>
@@ -1423,7 +500,7 @@
                         </div>
                     </div>
                     
-                    <!-- Deudas View -->
+                    <!-- DEUDAS -->
                     <div v-else-if="currentView === 'deudas'" key="deudas">
                         <div class="page-header">
                             <h1 class="page-title">
@@ -1439,7 +516,7 @@
                                     <i class="fas fa-list"></i>
                                     Deudas Registradas
                                 </h3>
-                                <button class="btn btn-primary" @click="changeView('nueva-deuda')">
+                                <button class="btn btn-primary" onclick="alert('Nueva deuda')">
                                     <i class="fas fa-plus"></i> Nueva Deuda
                                 </button>
                             </div>
@@ -1463,19 +540,19 @@
                                             <td><strong>{{ debt.codigo }}</strong></td>
                                             <td>{{ debt.cliente }}</td>
                                             <td>{{ debt.concepto }}</td>
-                                            <td>S/. {{ debt.monto.toFixed(2) }}</td>
-                                            <td>S/. {{ debt.pagado.toFixed(2) }}</td>
-                                            <td><strong>S/. {{ debt.restante.toFixed(2) }}</strong></td>
+                                            <td>{{ formatMoney(debt.monto) }}</td>
+                                            <td>{{ formatMoney(debt.pagado) }}</td>
+                                            <td><strong>{{ formatMoney(debt.restante) }}</strong></td>
                                             <td>
                                                 <span class="badge" :class="'badge-' + debt.estadoClass">
                                                     {{ debt.estado }}
                                                 </span>
                                             </td>
                                             <td>
-                                                <button class="action-btn" title="Ver">
+                                                <button class="action-btn" @click="viewDebt(debt)" title="Ver">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <button class="action-btn" title="Editar">
+                                                <button class="action-btn" @click="editDebt(debt)" title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                             </td>
@@ -1486,32 +563,14 @@
                         </div>
                     </div>
                     
-                    <!-- Default/Other Views -->
-                    <div v-else key="default">
-                        <div class="page-header">
-                            <h1 class="page-title">{{ viewTitle }}</h1>
-                            <p class="page-subtitle">Esta sección está en desarrollo</p>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i>
-                                <div>
-                                    <strong>Módulo en Desarrollo</strong>
-                                    <p style="margin: 5px 0 0 0;">
-                                        Esta funcionalidad estará disponible próximamente.
-                                        El prototipo muestra las principales vistas implementadas.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- OTRAS VISTAS - Renderizado dinámico desde views.js -->
+                    <div v-else :key="currentView" v-html="currentViewHTML"></div>
                 </transition>
             </div>
         </main>
     </div>
     
-    <!-- Success Modal -->
+    <!-- MODAL DE ÉXITO -->
     <transition name="fade">
         <div v-if="showSuccessModal" class="modal" @click.self="showSuccessModal = false">
             <div class="modal-content">
@@ -1531,7 +590,7 @@
                             <strong>¡Recibo emitido correctamente!</strong>
                             <p style="margin: 10px 0 0 0;">
                                 Código: <strong>{{ lastReceiptCode }}</strong><br>
-                                Monto: <strong>S/. {{ receiptTotal.toFixed(2) }}</strong>
+                                Monto: <strong>{{ formatMoney(receiptTotal) }}</strong>
                             </p>
                         </div>
                     </div>
@@ -1544,7 +603,7 @@
                     <button class="btn btn-outline" @click="showSuccessModal = false">
                         Cerrar
                     </button>
-                    <button class="btn btn-secondary">
+                    <button class="btn btn-secondary" @click="printReceipt({ codigo: lastReceiptCode })">
                         <i class="fas fa-print"></i> Imprimir
                     </button>
                     <button class="btn btn-primary" @click="startNewReceipt">
@@ -1556,234 +615,14 @@
     </transition>
 </div>
 
-<script>
-const { createApp } = Vue;
+<!-- Datos -->
+<script src="data.js"></script>
 
-createApp({
-    data() {
-        return {
-            sidebarVisible: true,
-            isMobile: window.innerWidth < 768,
-            currentView: 'dashboard',
-            globalSearch: '',
-            currentUser: {
-                name: 'Juan Pérez',
-                role: 'Cajero',
-                initials: 'JP'
-            },
-            stats: {
-                ingresosHoy: 48350,
-                recibosHoy: 127,
-                deudasPendientes: 12450,
-                tasaConciliacion: 98.5
-            },
-            clientSearch: '',
-            conceptSearch: '',
-            searchLoading: false,
-            selectedClient: null,
-            selectedConcepts: [],
-            showSuccessModal: false,
-            lastReceiptCode: '',
-            clients: [
-                { id: 1, dni: '12345678', nombreCompleto: 'PÉREZ GARCÍA, JUAN CARLOS', tipo: 'Alumno', tipoIcon: 'fas fa-graduation-cap', fuente: 'DICDA', actualizado: '30 min' },
-                { id: 2, dni: '87654321', nombreCompleto: 'LÓPEZ RAMÍREZ, MARÍA ELENA', tipo: 'Docente', tipoIcon: 'fas fa-chalkboard-teacher', fuente: 'DICDA', actualizado: '1 hora' },
-                { id: 3, dni: '11223344', nombreCompleto: 'GARCÍA TORRES, CARLOS ALBERTO', tipo: 'Alumno', tipoIcon: 'fas fa-graduation-cap', fuente: 'DIAA', actualizado: '15 min' },
-                { id: 4, dni: '44332211', nombreCompleto: 'FERNÁNDEZ SILVA, ANA PATRICIA', tipo: 'Externo', tipoIcon: 'fas fa-user', fuente: 'RENIEC', actualizado: '45 min' },
-                { id: 5, dni: '55667788', nombreCompleto: 'MARTÍNEZ CASTRO, PEDRO JOSÉ', tipo: 'Alumno', tipoIcon: 'fas fa-graduation-cap', fuente: 'DICDA', actualizado: '20 min' }
-            ],
-            concepts: [
-                { id: 1, nombre: 'DERECHO DE MATRÍCULA 2024-I', precio: 60.00, centro: 'Académico', cantidad: 1 },
-                { id: 2, nombre: 'CERTIFICADO DE ESTUDIOS', precio: 15.00, centro: 'Académico', cantidad: 1 },
-                { id: 3, nombre: 'ARTE Y CULTURA', precio: 5.00, centro: 'Cultura', cantidad: 1 },
-                { id: 4, nombre: 'DEPORTES', precio: 5.00, centro: 'Deportes', cantidad: 1 },
-                { id: 5, nombre: 'CONSTANCIA DE MATRÍCULA', precio: 10.00, centro: 'Académico', cantidad: 1 },
-                { id: 6, nombre: 'DUPLICADO DE CARNÉ', precio: 8.00, centro: 'Administración', cantidad: 1 },
-                { id: 7, nombre: 'CERTIFICADO DE NOTAS', precio: 20.00, centro: 'Académico', cantidad: 1 },
-                { id: 8, nombre: 'CONSTANCIA DE EGRESADO', precio: 25.00, centro: 'Académico', cantidad: 1 }
-            ],
-            receipts: [
-                { id: 1, codigo: 'R00001234', cliente: 'PÉREZ GARCÍA, JUAN', monto: 65.00, fecha: '30/03/2026 09:30', estado: 'Válido', estadoClass: 'success' },
-                { id: 2, codigo: 'R00001235', cliente: 'LÓPEZ RAMÍREZ, MARÍA', monto: 30.00, fecha: '30/03/2026 10:15', estado: 'Válido', estadoClass: 'success' },
-                { id: 3, codigo: 'R00001236', cliente: 'GARCÍA TORRES, CARLOS', monto: 75.00, fecha: '30/03/2026 11:00', estado: 'Válido', estadoClass: 'success' },
-                { id: 4, codigo: 'R00001237', cliente: 'FERNÁNDEZ SILVA, ANA', monto: 15.00, fecha: '30/03/2026 11:45', estado: 'Anulado', estadoClass: 'danger' },
-                { id: 5, codigo: 'R00001238', cliente: 'MARTÍNEZ CASTRO, PEDRO', monto: 20.00, fecha: '30/03/2026 12:30', estado: 'Válido', estadoClass: 'success' }
-            ],
-            debts: [
-                { id: 1, codigo: 'D0000001', cliente: 'PÉREZ GARCÍA, JUAN', concepto: 'Matrícula 2023-II', monto: 150.00, pagado: 100.00, restante: 50.00, estado: 'Pendiente', estadoClass: 'warning' },
-                { id: 2, codigo: 'D0000002', cliente: 'LÓPEZ RAMÍREZ, MARÍA', concepto: 'Certificados', monto: 50.00, pagado: 50.00, restante: 0.00, estado: 'Pagada', estadoClass: 'success' },
-                { id: 3, codigo: 'D0000003', cliente: 'GARCÍA TORRES, CARLOS', concepto: 'Derecho de Examen', monto: 80.00, pagado: 30.00, restante: 50.00, estado: 'Pendiente', estadoClass: 'warning' }
-            ]
-        }
-    },
-    
-    computed: {
-        breadcrumb() {
-            const breadcrumbs = {
-                'dashboard': 'Dashboard',
-                'buscar-cliente': 'Tesorería / Buscar Cliente',
-                'nuevo-recibo': 'Tesorería / Nuevo Recibo',
-                'recibos': 'Tesorería / Recibos',
-                'arqueo': 'Tesorería / Arqueo de Caja',
-                'deudas': 'Deudas / Gestionar',
-                'nueva-deuda': 'Deudas / Nueva Deuda',
-                'pagos-online': 'Pagos Virtuales / Online',
-                'pos': 'Pagos Virtuales / POS',
-                'banco': 'Pagos Virtuales / Banco',
-                'reportes': 'Reportes',
-                'conciliacion': 'Reportes / Conciliación',
-                'conceptos': 'Configuración / Conceptos',
-                'usuarios': 'Configuración / Usuarios',
-                'configuracion': 'Configuración / General'
-            };
-            return breadcrumbs[this.currentView] || this.currentView;
-        },
-        
-        viewTitle() {
-            const titles = {
-                'arqueo': 'Arqueo de Caja',
-                'nueva-deuda': 'Nueva Deuda',
-                'pagos-online': 'Pagos Online',
-                'pos': 'Pagos POS',
-                'banco': 'Banco Nación',
-                'reportes': 'Reportes',
-                'conciliacion': 'Conciliación Bancaria',
-                'conceptos': 'Conceptos de Pago',
-                'usuarios': 'Gestión de Usuarios',
-                'configuracion': 'Configuración General'
-            };
-            return titles[this.currentView] || 'Vista';
-        },
-        
-        filteredClients() {
-            if (!this.clientSearch) return [];
-            const search = this.clientSearch.toLowerCase();
-            return this.clients.filter(c => 
-                c.dni.includes(search) || 
-                c.nombreCompleto.toLowerCase().includes(search)
-            );
-        },
-        
-        filteredConcepts() {
-            if (!this.conceptSearch) return this.concepts;
-            const search = this.conceptSearch.toLowerCase();
-            return this.concepts.filter(c => 
-                c.nombre.toLowerCase().includes(search) ||
-                c.centro.toLowerCase().includes(search)
-            );
-        },
-        
-        receiptTotal() {
-            return this.selectedConcepts.reduce((sum, c) => sum + (c.precio * c.cantidad), 0);
-        },
-        
-        recentReceipts() {
-            return this.receipts.slice(0, 5);
-        }
-    },
-    
-    methods: {
-        toggleSidebar() {
-            this.sidebarVisible = !this.sidebarVisible;
-        },
-        
-        changeView(view) {
-            this.currentView = view;
-            if (this.isMobile) {
-                this.sidebarVisible = false;
-            }
-        },
-        
-        searchClients() {
-            this.searchLoading = true;
-            setTimeout(() => {
-                this.searchLoading = false;
-            }, 300);
-        },
-        
-        selectClientForPayment(client) {
-            this.selectedClient = client;
-            this.changeView('nuevo-recibo');
-        },
-        
-        viewClientHistory(client) {
-            alert(`Ver historial de ${client.nombreCompleto}`);
-        },
-        
-        toggleConcept(concept) {
-            const index = this.selectedConcepts.findIndex(c => c.id === concept.id);
-            if (index >= 0) {
-                this.selectedConcepts.splice(index, 1);
-            } else {
-                this.selectedConcepts.push({ ...concept, cantidad: 1 });
-            }
-        },
-        
-        updateConceptQuantity(id, quantity) {
-            const concept = this.selectedConcepts.find(c => c.id === id);
-            if (concept) {
-                concept.cantidad = parseInt(quantity) || 1;
-            }
-        },
-        
-        removeConcept(id) {
-            const index = this.selectedConcepts.findIndex(c => c.id === id);
-            if (index >= 0) {
-                this.selectedConcepts.splice(index, 1);
-            }
-        },
-        
-        cancelReceipt() {
-            if (confirm('¿Deseas cancelar este recibo?')) {
-                this.selectedConcepts = [];
-                this.selectedClient = null;
-                this.changeView('buscar-cliente');
-            }
-        },
-        
-        emitReceipt() {
-            if (this.selectedConcepts.length === 0) {
-                alert('Selecciona al menos un concepto');
-                return;
-            }
-            
-            // Generar código de recibo
-            this.lastReceiptCode = 'R' + String(this.receipts.length + 1).padStart(8, '0');
-            
-            // Agregar recibo
-            const newReceipt = {
-                id: this.receipts.length + 1,
-                codigo: this.lastReceiptCode,
-                cliente: this.selectedClient.nombreCompleto,
-                monto: this.receiptTotal,
-                fecha: new Date().toLocaleString('es-PE'),
-                estado: 'Válido',
-                estadoClass: 'success'
-            };
-            
-            this.receipts.unshift(newReceipt);
-            
-            // Actualizar stats
-            this.stats.ingresosHoy += this.receiptTotal;
-            this.stats.recibosHoy++;
-            
-            // Mostrar modal de éxito
-            this.showSuccessModal = true;
-        },
-        
-        startNewReceipt() {
-            this.selectedConcepts = [];
-            this.showSuccessModal = false;
-            this.changeView('buscar-cliente');
-        }
-    },
-    
-    mounted() {
-        window.addEventListener('resize', () => {
-            this.isMobile = window.innerWidth < 768;
-        });
-    }
-}).mount('#app');
-</script>
+<!-- Vistas dinámicas -->
+<script src="views.js"></script>
+
+<!-- App -->
+<script src="app.js"></script>
 
 </body>
 </html>
